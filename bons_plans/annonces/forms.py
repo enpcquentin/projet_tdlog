@@ -26,4 +26,4 @@ class AnnonceForm(forms.ModelForm):
 
     class Meta:
         model = Annonce
-        fields = ('titre', 'categorie', 'auteur', 'descriptif', 'adresse', 'code_postal', 'ville')
+        fields = ('titre', 'categorie', 'descriptif', 'adresse', 'code_postal', 'ville')

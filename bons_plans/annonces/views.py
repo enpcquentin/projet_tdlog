@@ -134,10 +134,10 @@ def ajout_annonce(request):
 
         # If the form is valid...
         if annonce_form.is_valid():
-            # Save the user's form data to the database.
-            annonce = annonce_form.save()
+            # Save the user's form data, but commit=False doesn't send it right now to the database
+            annonce = annonce_form.save(commit=False)
+            annonce.auteur = request.user
             annonce.save()
-
             # Update our variable to tell the template registration was successful.
             posted = True
 

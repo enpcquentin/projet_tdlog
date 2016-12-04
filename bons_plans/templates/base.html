@@ -1,15 +1,12 @@
 {% load static %}
     <head>
         <meta charset="utf-8" />
-		<link rel="stylesheet" href="/static/css/home.css" />
+		    <link rel="stylesheet" href="/static/css/home.css" />
         <title> {% block title %} {% endblock %} </title>
-
-
-
-  <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-    <script>
-    //Inspiré d'un exemple de GeoTribu
-    function init() {
+        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+        <script>
+        //Inspiré d'un exemple de GeoTribu
+        function init() {
         var map, popup;
         map = new OpenLayers.Map("map");
 
@@ -56,60 +53,58 @@
             OpenLayers.Event.stop(evt);
         }
     }
-    </script>
-
+        </script>
     </head>
 
     <body>
-        <div id="bloc_page">
-            <header>
-                <div id="titre_principal">
-                    <div id="logo">
-						<img src="{% static 'annonces/logo.jpeg' %}" alt="Logo Bons Plans" ></code>
-                        <h1>Les Bons Plans</h1>
-                    </div>
-                    <h2> {% block titlepage%} Les dernières annonces {%endblock%}</h2>
-                </div>
-
-                <nav>
-                    <ul>
-                        <li><a href="{% url 'home' %}" >Accueil</a></li>
-                        <li><a href="#">Recherche</a></li>
-						{% if user.is_authenticated %}
-              <li><a href="{% url 'ajout_annonce' %}" >Poster une annonce</a></li>
-							<li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
-                        {% else %}
-							<li><a href="{% url 'connexion' %}" >Connexion</a></li>
-                            <li><a href="{% url 'inscription' %}" >S'inscrire</a></li>
-
-						{% endif %}
-
-                    </ul>
-                </nav>
-            </header>
-
-            <div id="banniere_image">
-                <div id="banniere_description">
-                    Dernière annonce parue ...
-                    <a href="#" class="bouton_rouge">Voir l'annonce <img src="{% static 'img/flecheblanchedroite.png' %}" alt="" ></a>
+    <div id="bloc_page">
+        <header>
+            <div id="titre_principal">
+                <div id="logo">
+				            <img src="{% static 'annonces/logo.jpeg' %}" alt="Logo Bons Plans" ></code>
+                    <h1>Les Bons Plans</h1>
                 </div>
             </div>
+            <div style="text-align:center">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}" >Accueil</a></li>
+                    <li><a href="#">Recherche</a></li>
+				            {% if user.is_authenticated %}
+                        <li><a href="{% url 'ajout_annonce' %}" >Poster une annonce</a></li>
+					              <li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
+                    {% else %}
+					              <li><a href="{% url 'connexion' %}" >Connexion</a></li>
+                        <li><a href="{% url 'inscription' %}" >S'inscrire</a></li>
+				            {% endif %}
+                </ul>
+            </nav>
+            </div>
+        </header>
 
-            <section> {% block content %}
-                <body onload="init()" >
-                    <div id="map" style="width: 512px; height: 256px; border: 1px solid #bbb;"></div>
-                    <h4>Exemple de marqueur cliquable</h4>
-                </body>
+        <div id="banniere_image">
+            <div id="banniere_description">
+                Dernière annonce parue ...
+                <a href="#" class="bouton_rouge">Voir l'annonce <img src="{% static 'img/flecheblanchedroite.png' %}" alt="" ></a>
+            </div>
+        </div>
 
-				{% endblock %}
-            </section>
+        <section>
+        {% block content %}
+            <body onload="init()" >
+                <div id="map" style="width: 512px; height: 256px; border: 1px solid #bbb;"></div>
+                <h4>Exemple de marqueur cliquable</h4>
+            </body>
+
+		    {% endblock %}
+        </section>
 
 
-			<footer>
-                <div id="tweet">
-                    <h1>Les créateurs</h1>
-                    <p>Gaspard, Pierre et Quentin</p>
-                </div>
-            </footer>
+			  <footer>
+            <div id="tweet">
+                <h1>Les créateurs</h1>
+                <p>Gaspard, Pierre et Quentin</p>
+            </div>
+        </footer>
         </div>
     </body>

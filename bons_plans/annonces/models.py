@@ -29,7 +29,7 @@ class Categorie(models.Model):
 class Annonce(models.Model):
     titre = models.CharField(max_length=100)
     categorie = models.ForeignKey('Categorie')
-    auteur = models.OneToOneField(User)
+    auteur = models.ForeignKey(User)
     descriptif = models.TextField(null=True)
     date = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name="Date de parution")
     adresse = models.CharField(max_length=100, default = '')
