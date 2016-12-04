@@ -12,7 +12,7 @@
     function init() {
         var map, popup;
         map = new OpenLayers.Map("map");
- 
+
         var layer_OSM = new OpenLayers.Layer.XYZ(
             "OSM.Fr",
             [ "http://a.tile.openstreetmap.fr/osmfr/${z}/${x}/${y}.png", "http://b.tile.openstreetmap.fr/osmfr/${z}/${x}/${y}.png", "http://c.tile.openstreetmap.fr/osmfr/${z}/${x}/${y}.png" ],
@@ -26,21 +26,21 @@
         map.addLayer(layer_OSM);
         map.setCenter(new OpenLayers.LonLat(1, 41), 2);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
- 
+
         markers = new OpenLayers.Layer.Markers("Marker");
         map.addLayer(markers);
- 
+
         //Creation du Marker
         pos = new OpenLayers.LonLat(1.402,43.577);
         pos.transform(new OpenLayers.Projection("EPSG:4326"),
         new OpenLayers.Projection("EPSG:900913")); //Conversion en coordonnées spherical Mercator
         map.setCenter(pos, 11);
- 
+
         feature = new OpenLayers.Feature(layer_OSM, pos);
         marker = feature.createMarker();
         markers.addMarker(marker);
         marker.events.register("mousedown", marker, mousedown);
- 
+
         //Gestion des evenements
         function mousedown(evt) {
             //Je verifie qu'aucun popup n'existe deja
@@ -59,41 +59,42 @@
     </script>
 
     </head>
-    
+
     <body>
         <div id="bloc_page">
             <header>
                 <div id="titre_principal">
                     <div id="logo">
 						<img src="{% static 'annonces/logo.jpeg' %}" alt="Logo Bons Plans" ></code>
-                        <h1>Les Bons Plans</h1>    
+                        <h1>Les Bons Plans</h1>
                     </div>
                     <h2> {% block titlepage%} Les dernières annonces {%endblock%}</h2>
                 </div>
-                
+
                 <nav>
                     <ul>
                         <li><a href="{% url 'home' %}" >Accueil</a></li>
                         <li><a href="#">Recherche</a></li>
 						{% if user.is_authenticated %}
+              <li><a href="{% url 'ajout_annonce' %}" >Poster une annonce</a></li>
 							<li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
                         {% else %}
 							<li><a href="{% url 'connexion' %}" >Connexion</a></li>
                             <li><a href="{% url 'inscription' %}" >S'inscrire</a></li>
 
 						{% endif %}
-						
+
                     </ul>
                 </nav>
             </header>
-            
+
             <div id="banniere_image">
                 <div id="banniere_description">
                     Dernière annonce parue ...
                     <a href="#" class="bouton_rouge">Voir l'annonce <img src="{% static 'img/flecheblanchedroite.png' %}" alt="" ></a>
                 </div>
             </div>
-            
+
             <section> {% block content %}
                 <body onload="init()" >
                     <div id="map" style="width: 512px; height: 256px; border: 1px solid #bbb;"></div>
@@ -102,8 +103,8 @@
 
 				{% endblock %}
             </section>
-			
-            
+
+
 			<footer>
                 <div id="tweet">
                     <h1>Les créateurs</h1>

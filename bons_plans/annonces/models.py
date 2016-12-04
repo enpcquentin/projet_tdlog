@@ -16,28 +16,25 @@ class UserProfile(models.Model):
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username
-        
-        
-        
 
+# différentes catégorie possibles
+# peut être les créer à la main via l'interface d'administration ?
 class Categorie(models.Model):
     nom = models.CharField(max_length=30)
 
     def __str__(self):
         return self.nom
 
-
+# modèle d'annonce avec plusieurs attributs
 class Annonce(models.Model):
     titre = models.CharField(max_length=100)
     categorie = models.ForeignKey('Categorie')
-    #auteur = models.ForeignKey(User)
+    auteur = models.OneToOneField(User)
     descriptif = models.TextField(null=True)
-    date = models.DateTimeField(auto_now_add=True, auto_now=False, 
-                                verbose_name="Date de parution")
-    #adresse = 
+    date = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name="Date de parution")
+    adresse = models.CharField(max_length=100, default = '')
+    ville = models.CharField(max_length=20, default = '')
+    code_postal = models.CharField(max_length=5, default = '')
 
     def __str__(self):
         return self.titre
-
-
-
