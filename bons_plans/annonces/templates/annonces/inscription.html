@@ -3,17 +3,25 @@
 {% block titlepage%} S'inscrire {% endblock %}
 
 {% block content %}
-{% if envoi %}Bienvenue sur notre site !{% endif %}
+{% if registered %}
+        <strong>thank you for registering!</strong>
+{% else %}
+        <strong>register here!</strong><br />
 
-{% if error %}
-<p><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
+        <form id="user_form" method="post" action="{% url 'inscription' %}"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <!-- Display each form. The as_p method wraps each element in a paragraph
+                 (<p>) element. This ensures each element appears on a new line,
+                 making everything look neater. -->
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Register" />
+        </form>
 {% endif %}
-
-<form action="{% url 'inscription' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ profil_form.as_p }}
-    <input type="submit" value="S'inscrire" />
-</form>
 
 {% endblock %}

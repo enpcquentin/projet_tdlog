@@ -76,7 +76,6 @@
                         <li><a href="{% url 'home' %}" >Accueil</a></li>
                         <li><a href="#">Recherche</a></li>
 						{% if user.is_authenticated %}
-                            <li><a href="{% url 'profil' %}" >Profil</a></li>
 							<li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
                         {% else %}
 							<li><a href="{% url 'connexion' %}" >Connexion</a></li>

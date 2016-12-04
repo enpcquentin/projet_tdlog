@@ -4,18 +4,13 @@
 
 {% block content %}
 
-{% if error %}
-<p><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
-{% endif %}
+        <form id="login_form" method="post" action="{% url 'connexion' %}">
+            {% csrf_token %}
+            Username: <input type="text" name="username" value="" size="50" />
+            <br />
+            Password: <input type="password" name="password" value="" size="50" />
+            <br />
 
-{% if user.is_authenticated %}
-Vous êtes connecté, {{ user.username }} !
-{% else %}
-<form action="{% url 'connexion' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Se connecter" />
-</form>
-{% endif %}
-
+            <input type="submit" value="submit" />
+        </form>
 {% endblock %}
