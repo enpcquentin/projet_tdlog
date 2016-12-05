@@ -31,7 +31,7 @@ class Annonce(models.Model):
     categorie = models.ForeignKey('Categorie')
     auteur = models.ForeignKey(User)
     descriptif = models.TextField(null=True)
-    date = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name="Date de parution")
+    date = models.DateTimeField()
     adresse = models.CharField(max_length=100, default = '')
     ville = models.CharField(max_length=20, default = '')
     code_postal = models.CharField(max_length=5, default = '')

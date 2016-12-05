@@ -4,6 +4,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
+from django.utils import timezone
 
 
 
@@ -137,6 +138,7 @@ def ajout_annonce(request):
             # Save the user's form data, but commit=False doesn't send it right now to the database
             annonce = annonce_form.save(commit=False)
             annonce.auteur = request.user
+            annonce.date = timezone.now()
             annonce.save()
             # Update our variable to tell the template registration was successful.
             posted = True
