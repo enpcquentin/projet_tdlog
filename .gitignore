@@ -1,3 +1,6 @@
 bons_plans/bons_plans/__pycache__
+bons_plans/bons_plans/__pycache__/*
 bons_plans/annonces/migrations/__pycache__
+bons_plans/annonces/migrations/__pycache__/*
 bons_plans/annonces/__pycache__
+bons_plans/annonces/__pycache__/*
