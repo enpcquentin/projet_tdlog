@@ -3,4 +3,40 @@
 
 {% block title %} Page d'accueil {% endblock %}
 
+{% block content %}
 
+
+
+  <body>
+    <div id="mapDiv" style="width: 600px; height: 400px;"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script>
+      // coordonnees de Paris
+      var paris = new google.maps.LatLng(48.856578, 2.351828);
+
+      // recuperation de l'element HTML sur lequel afficher la carte
+      var mapCanvas = document.getElementById("mapDiv");
+
+      // creation effective de la carte
+      var mapOptions = {
+        center: paris,
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(mapCanvas, mapOptions);
+
+      {% for coord in coords %}
+      // definition du marqueur et ajout a la carte
+      var lieu = new google.maps.LatLng({{coord.0 | stringformat:"f"}}, {{coord.1 | stringformat:"f"}});
+      var markOptions = {
+        position: lieu,
+        map: map,
+        title: "Titre"
+      };
+      var mark = new google.maps.Marker(markOptions);
+      {% endfor %}
+
+    </script>
+  </body>
+
+  {% endblock %}

@@ -11,8 +11,16 @@ class UserProfile(models.Model):
 
     # The additional attributes we wish to include.
     website = models.URLField(blank=True)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+    numero = models.IntegerField(default=2)
+    rue =  models.CharField(max_length=100,default='Allée de la Noiseraie')
+    pays =  models.CharField(max_length=100,default='France')
+    code_postal =  models.IntegerField(default=77420)
+    region = models.CharField(max_length=100,default='Île-de-France')
 
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+    ville = models.CharField(max_length=100,default = 'Noisy-le-Grand')
+    lat =  models.FloatField(default=48.8411)
+    long =  models.FloatField(default=2.5880)
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username

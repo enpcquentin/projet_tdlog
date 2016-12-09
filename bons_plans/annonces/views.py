@@ -7,12 +7,21 @@ from django.contrib.auth import authenticate, login
 from django.utils import timezone
 
 
+from annonces.models import UserProfile
+
+
+
+
 
 def home(request):
-    #text="""Bonjour"""
-    #return HttpResponse(text)
-    return render(request, 'annonces/home.html')
+    list_coord=[]
+    for user in UserProfile.objects.all():
+        lat = user.lat
+        long = user.long
+        list_coord.append((lat,long))
+    coords_dict = {'coords': list_coord}
 
+    return render(request, 'annonces/home.html', coords_dict)
 
 def connexion(request):
 
@@ -70,7 +79,7 @@ def inscription(request):
         # Note that we make use of both UserForm and UserProfileForm.
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileForm(data=request.POST)
-
+        
         # If the two forms are valid...
         if user_form.is_valid() and profile_form.is_valid():
             # Save the user's form data to the database.
@@ -86,11 +95,19 @@ def inscription(request):
             # This delays saving the model until we're ready to avoid integrity problems.
             profile = profile_form.save(commit=False)
             profile.user = user
-
             # Did the user provide a profile picture?
             # If so, we need to get it from the input form and put it in the UserProfile model.
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
+
+            profile.ville = request.POST.get('ville')
+            profile.numero = request.POST.get('numero')
+            profile.region = request.POST.get('region')
+            profile.pays = request.POST.get('pays')
+            profile.code_postal = request.POST.get('code_postal')
+            profile.rue = request.POST.get('rue')
+            profile.lat = float(request.POST.get('cityLat'))
+            profile.long = float(request.POST.get('cityLng'))
 
             # Now we save the UserProfile model instance.
             profile.save()
