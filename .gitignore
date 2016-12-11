@@ -4,3 +4,5 @@ bons_plans/annonces/migrations/__pycache__
 bons_plans/annonces/migrations/__pycache__/*
 bons_plans/annonces/__pycache__
 bons_plans/annonces/__pycache__/*
+.idea
+.idea/*
