@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from annonces.models import UserProfile, Annonce
 
 
 class ConnexionForm(forms.Form):
@@ -8,7 +9,6 @@ class ConnexionForm(forms.Form):
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
 
 
-from annonces.models import UserProfile
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
@@ -16,12 +16,13 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username', 'email', 'password')
 
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')
 
-from annonces.models import Annonce
+
 class AnnonceForm(forms.ModelForm):
 
     class Meta:
