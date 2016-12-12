@@ -32,12 +32,11 @@
             </div>
         </header>
 
-        <div id="banniere_image">
-            <div id="banniere_description">
-                Dernière annonce parue ...
-                <a href="#" class="bouton_rouge">Voir l'annonce <img src="{% static 'img/flecheblanchedroite.png' %}" alt="" ></a>
-            </div>
-        </div>
+        <section>
+        {% block timeline %}
+
+        {% endblock %}
+        </section>
 
         <section>
         {% block content %}

@@ -3,9 +3,27 @@
 
 {% block title %} Page d'accueil {% endblock %}
 
+{% block timeline %}
+
+<div id="bloc_page">
+<div id="banniere_image">
+    <div id="banniere_description">
+        <strong> Dernière annonce parue : </strong> <br>
+          {% if annonce %}
+            {% for a in annonce %}
+              <strong> Titre : </strong> {{ a.titre }} <br>
+              <strong> Descriptif : </strong> {{ a.descriptif }}
+            {% endfor %}
+          {% else %}
+            Il n'y a aucune annonce ...
+          {% endif %}
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
 {% block content %}
-
-
 
   <body>
     <div id="mapDiv" style="width: 600px; height: 400px;"></div>
