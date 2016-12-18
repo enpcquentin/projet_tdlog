@@ -9,14 +9,12 @@ from annonces.models import UserProfile
 
 
 def home(request):
-    list_coord=[]
-    for user in UserProfile.objects.all():
-        lat = user.lat
-        long = user.long
-        list_coord.append((lat, long))
-    coords_dict = {'coords': list_coord}
+    list_profils=[]
+    for profil in UserProfile.objects.all():
+        list_profils.append(profil)
+    profils_dict = {'profils': list_profils}
 
-    return render(request, 'annonces/home.html', coords_dict)
+    return render(request, 'annonces/home.html', profils_dict)
 
 
 def connexion(request):
@@ -111,6 +109,15 @@ def ajout_annonce(request):
             annonce = annonce_form.save(commit=False)
             annonce.auteur = request.user
             annonce.date = timezone.now()
+            
+            annonce.ville = request.POST.get('ville')
+            annonce.numero = request.POST.get('numero')
+            annonce.region = request.POST.get('region')
+            annonce.pays = request.POST.get('pays')
+            annonce.code_postal = request.POST.get('code_postal')
+            annonce.rue = request.POST.get('rue')
+            annonce.lat = float(request.POST.get('cityLat'))
+            annonce.long = float(request.POST.get('cityLng'))
             annonce.save()
             # Update our variable to tell the template registration was successful.
             posted = True

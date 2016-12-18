@@ -38,23 +38,43 @@
       // creation effective de la carte
       var mapOptions = {
         center: paris,
-        zoom: 16,
+        zoom: 10,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       var map = new google.maps.Map(mapCanvas, mapOptions);
 
-      {% for coord in coords %}
+     function addInfoWindowToMarker(map, marker, content_bulle) {
+    var infoWindow = new google.maps.InfoWindow({
+        content: content_bulle
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+        infoWindow.open(map,this)
+    });
+}
+
+
+
+      {% for profil in profils %}
       // definition du marqueur et ajout a la carte
-      var lieu = new google.maps.LatLng({{coord.0 | stringformat:"f"}}, {{coord.1 | stringformat:"f"}});
+      var lieu = new google.maps.LatLng({{profil.lat | stringformat:"f"}}, {{profil.long | stringformat:"f"}});
       var markOptions = {
         position: lieu,
         map: map,
-        title: "Titre"
+        title: "voir le profil"
       };
       var mark = new google.maps.Marker(markOptions);
+      addInfoWindowToMarker(map, mark, "{{profil.user.username}}");
+
+      // lien entre le marqueur et la fonction
       {% endfor %}
 
+
+
+
+
+
     </script>
+
   </body>
 
   {% endblock %}

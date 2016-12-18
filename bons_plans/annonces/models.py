@@ -42,9 +42,15 @@ class Annonce(models.Model):
     auteur = models.ForeignKey(User)
     descriptif = models.TextField(null=True)
     date = models.DateTimeField()
-    adresse = models.CharField(max_length=100, default = '')
-    ville = models.CharField(max_length=20, default = '')
-    code_postal = models.CharField(max_length=5, default = '')
+    numero = models.IntegerField(default=2)
+    rue = models.CharField(max_length=100, default='Allée de la Noiseraie')
+    pays = models.CharField(max_length=100, default='France')
+    code_postal = models.IntegerField(default=77420)
+    region = models.CharField(max_length=100, default='Île-de-France')
+
+    ville = models.CharField(max_length=100, default='Noisy-le-Grand')
+    lat = models.FloatField(default=48.8411)
+    long = models.FloatField(default=2.5880)
 
     def __str__(self):
         return self.titre
