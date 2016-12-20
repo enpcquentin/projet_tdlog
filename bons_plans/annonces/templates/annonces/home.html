@@ -65,12 +65,40 @@
       var mark = new google.maps.Marker(markOptions);
       addInfoWindowToMarker(map, mark, "{{profil.user.username}}");
 
-      // lien entre le marqueur et la fonction
       {% endfor %}
 
 
 
 
+var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+        var icons = {
+          Ballade: {
+            icon: iconBase + 'hiker_maps.png'
+          },
+          Échange: {
+            icon: iconBase + 'info-i_maps.png'
+          },
+          Restaurant: {
+            icon: iconBase + 'dining_maps.png'
+          },
+          Service: {
+            icon: iconBase + 'mechanic_maps.png'
+          }
+        };
+      {% for add in annonces %}
+      // definition du marqueur et ajout a la carte
+      var lieu = new google.maps.LatLng({{add.lat | stringformat:"f"}}, {{add.long | stringformat:"f"}});
+      var markOptions = {
+        position: lieu,
+        map: map,
+        title: "voir l'annonce",
+        icon : icons["{{add.categorie}}"].icon,
+      };
+      var mark = new google.maps.Marker(markOptions);
+
+      addInfoWindowToMarker(map, mark, "{{add.descriptif}}");
+
+      {% endfor %}
 
 
     </script>

@@ -5,14 +5,16 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
 from django.utils import timezone
 from annonces.forms import UserProfileForm, UserForm, AnnonceForm
-from annonces.models import UserProfile
+
+
+from annonces.models import UserProfile, Annonce
 
 
 def home(request):
     list_profils=[]
     for profil in UserProfile.objects.all():
         list_profils.append(profil)
-    profils_dict = {'profils': list_profils}
+    profils_dict = {'profils': list_profils, 'annonces': Annonce.objects.all()}
 
     return render(request, 'annonces/home.html', profils_dict)
 
