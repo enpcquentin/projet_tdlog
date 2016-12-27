@@ -6,11 +6,17 @@
 
         <form id="login_form" method="post" action="{% url 'connexion' %}">
             {% csrf_token %}
-            Utilisateur : <input type="text" name="username" value="" size="50" />
+
+        <td> <strong> Utilisateur  </strong>  </td>
+
+            <input type="text" name="username" value="" size="50" />
             <br />
-            Mot de passe : <input type="password" name="password" value="" size="50" />
+        <td> <strong>  Mot de passe  </strong>  </td>
+
+<input type="password" name="password" value="" size="50" />
             <br />
 
             <input type="submit" value="Connexion" />
+
         </form>
 {% endblock %}

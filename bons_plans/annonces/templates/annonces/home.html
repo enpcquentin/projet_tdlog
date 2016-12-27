@@ -3,8 +3,9 @@
 
 {% block title %} Page d'accueil {% endblock %}
 
-{% block timeline %}
 
+
+<!--
 <div id="bloc_page">
 <div id="banniere_image">
     <div id="banniere_description">
@@ -19,90 +20,168 @@
           {% endif %}
     </div>
 </div>
-</div>
+</div>  -->
+
+
+{% block content %}
+<article style="float: left;  margin: 0 1.5%; width: 63%;">
+
+    <div id="map"></div>
+    <script>
+    function addInfoWindowToMarker(map, marker, content_bulle) {
+                      var infoWindow = new google.maps.InfoWindow({
+                          content: content_bulle  
+                      });
+                      google.maps.event.addListener(marker, 'click', function() {
+                          infoWindow.open(map,this)
+                      });
+                  }
+      function initMap() {
+                      // coordonnees de Paris
+                        var paris = new google.maps.LatLng(48.856578, 2.351828);
+
+                        // recuperation de l'element HTML sur lequel afficher la carte
+                        var mapCanvas = document.getElementById("map");
+
+                        // creation effective de la carte
+                        var mapOptions = {
+                          center: paris,
+                          zoom: 10,
+                          mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+                        var map = new google.maps.Map(mapCanvas, mapOptions);
+
+
+
+                        {% for profil in profils %}
+                        // definition du marqueur et ajout a la carte
+                        var lieu = new google.maps.LatLng({{profil.lat | stringformat:"f"}}, {{profil.long | stringformat:"f"}});
+                        var markOptions = {
+                          position: lieu,
+                          map: map,
+                          title: "voir le profil"
+                        };
+                        var mark = new google.maps.Marker(markOptions);
+                        addInfoWindowToMarker(map, mark, "{{profil.user.username}}");
+
+                        {% endfor %}
+
+
+
+
+                  var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+                          var icons = {
+                            Ballade: {
+                              icon: iconBase + 'hiker_maps.png'
+                            },
+                            Échange: {
+                              icon: iconBase + 'info-i_maps.png'
+                            },
+                            Restaurant: {
+                              icon: iconBase + 'dining_maps.png'
+                            },
+                            Service: {
+                              icon: iconBase + 'mechanic_maps.png'
+                            }
+                          };
+                        {% for add in annonces %}
+                        // definition du marqueur et ajout a la carte
+                        var lieu = new google.maps.LatLng({{add.lat | stringformat:"f"}}, {{add.long | stringformat:"f"}});
+                        var markOptions = {
+                          position: lieu,
+                          map: map,
+                          title: "voir l'annonce",
+                          icon : icons["{{add.categorie}}"].icon,
+                        };
+                        var mark = new google.maps.Marker(markOptions);
+
+                        addInfoWindowToMarker(map, mark, "{{add.titre}}");
+
+
+                        {% endfor %}
+      }
+    </script>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCz7usmwU_bwE46NxmQlKepw5a0GF2IYA&callback=initMap">
+    </script>
+
+</article>
+
+<aside>
+
+
+
+</aside>
+
+
+  {% endblock %}
+
+
+
+
+{% block lastnews %}
+
+<h2>Les Dernières Actualités</h2>
+
+<div class="container">
+    <div class="row ">
+            <div class="col-md-12">
+                <div id="carousel-example" class="carousel slide" data-ride="carousel">
+
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example" data-slide-to="0" class=""></li>
+                        <li data-target="#carousel-example" data-slide-to="1" class=""></li>
+                        <li data-target="#carousel-example" data-slide-to="2" class=""></li>
+                    </ol>
+
+                    <div class="carousel-inner">
+                        <div class="item">
+                            <div class="container center">
+                                <div class="col-md-6 col-md-offset-3 slide-custom">
+                                   
+                                    <h4><i class="fa fa-quote-left"></i>
+                                         {{annonces.0.descriptif}}
+                                        <i class="fa fa-quote-right"></i></h4>
+                                     <div class="user-img pull-right">
+                        <img src="/{{annonces.0.auteur.picture}}" alt="" class="img-u image-responsive img-circle">
+                    </div>
+                                    <h5 class="pull-right"><strong class="c-set" >{{annonces.0.categorie}}</strong></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item active left">
+                            <div class="container center">
+                                <div class="col-md-6 col-md-offset-3 slide-custom">
+                                    <h4> <i class="fa fa-quote-left"></i> {{annonces.1.descriptif}} <i class="fa fa-quote-right"></i></h4>
+                                         <div class="user-img pull-right">
+
+
+                        <img src="/{{annonces.1.auteur.picture}}" alt="" class="img-u image-responsive">
+                    </div>
+                                    <h5 class="pull-right"><strong class="c-set" > {{annonces.1.categorie}} </strong></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item next left">
+                            <div class="container center">
+                                <div class="col-md-6 col-md-offset-3 slide-custom">
+                                    <h4><i class="fa fa-quote-left"></i> {{annonces.2.descriptif}} <i class="fa fa-quote-right"></i></h4>
+                                        <div class="user-img pull-right">
+
+                        <img src="/{{annonces.2.auteur.picture}}" alt="" class="img-u image-responsive">
+                    </div>
+                                    <h5 class="pull-right"><strong class="c-set">  {{annonces.2.categorie}}  </strong></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+
+
 
 {% endblock %}
 
-{% block content %}
-
-  <body>
-    <div id="mapDiv" style="width: 600px; height: 400px;"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCz7usmwU_bwE46NxmQlKepw5a0GF2IYA&sensor=false"></script>
-    <script>
-      // coordonnees de Paris
-      var paris = new google.maps.LatLng(48.856578, 2.351828);
-
-      // recuperation de l'element HTML sur lequel afficher la carte
-      var mapCanvas = document.getElementById("mapDiv");
-
-      // creation effective de la carte
-      var mapOptions = {
-        center: paris,
-        zoom: 10,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map(mapCanvas, mapOptions);
-
-     function addInfoWindowToMarker(map, marker, content_bulle) {
-    var infoWindow = new google.maps.InfoWindow({
-        content: content_bulle
-    });
-    google.maps.event.addListener(marker, 'click', function() {
-        infoWindow.open(map,this)
-    });
-}
-
-
-
-      {% for profil in profils %}
-      // definition du marqueur et ajout a la carte
-      var lieu = new google.maps.LatLng({{profil.lat | stringformat:"f"}}, {{profil.long | stringformat:"f"}});
-      var markOptions = {
-        position: lieu,
-        map: map,
-        title: "voir le profil"
-      };
-      var mark = new google.maps.Marker(markOptions);
-      addInfoWindowToMarker(map, mark, "{{profil.user.username}}");
-
-      {% endfor %}
-
-
-
-
-var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-        var icons = {
-          Ballade: {
-            icon: iconBase + 'hiker_maps.png'
-          },
-          Échange: {
-            icon: iconBase + 'info-i_maps.png'
-          },
-          Restaurant: {
-            icon: iconBase + 'dining_maps.png'
-          },
-          Service: {
-            icon: iconBase + 'mechanic_maps.png'
-          }
-        };
-      {% for add in annonces %}
-      // definition du marqueur et ajout a la carte
-      var lieu = new google.maps.LatLng({{add.lat | stringformat:"f"}}, {{add.long | stringformat:"f"}});
-      var markOptions = {
-        position: lieu,
-        map: map,
-        title: "voir l'annonce",
-        icon : icons["{{add.categorie}}"].icon,
-      };
-      var mark = new google.maps.Marker(markOptions);
-
-      addInfoWindowToMarker(map, mark, "{{add.descriptif}}");
-
-      {% endfor %}
-
-
-    </script>
-
-  </body>
-
-  {% endblock %}

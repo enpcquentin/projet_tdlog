@@ -14,7 +14,7 @@ def home(request):
     list_profils=[]
     for profil in UserProfile.objects.all():
         list_profils.append(profil)
-    profils_dict = {'profils': list_profils, 'annonces': Annonce.objects.all()}
+    profils_dict = {'profils': list_profils, 'annonces': Annonce.objects.order_by('date').reverse()}
 
     return render(request, 'annonces/home.html', profils_dict)
 

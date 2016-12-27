@@ -17,7 +17,7 @@ class UserProfile(models.Model):
     code_postal = models.IntegerField(default=77420)
     region = models.CharField(max_length=100, default='Île-de-France')
 
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+    picture = models.ImageField(upload_to='static/img', blank=True)
     ville = models.CharField(max_length=100, default='Noisy-le-Grand')
     lat = models.FloatField(default=48.8411)
     long = models.FloatField(default=2.5880)
