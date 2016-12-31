@@ -127,7 +127,7 @@ padding-top: 5px;
 	letter-spacing: 2px;
 }
 .navbar-inverse :hover .navbar-brand:hover {
-	color: #000;	
+	color: #000;
 }
 .navbar-inverse .navbar-nav > li > a {
 color: #000;
@@ -140,11 +140,15 @@ border-color: #000;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
-color: #000;
+color: 	#B22222;
 }
 .navbar-toggle {
     background-color: black;
 }
+
+.btn.btn-circle { border-radius: 50px; }
+.btn.btn-outline { background-color: transparent; }
+
 
 /*=======================================
     HOME SECTION STYLES

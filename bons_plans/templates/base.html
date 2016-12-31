@@ -33,14 +33,20 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{% url 'home' %}" >Accueil</a></li>
+<!--
                     <li><a href="#">Recherche</a></li>
-                            {% if user.is_authenticated %}
+-->
+                    {% if user.is_authenticated %}
                         <li><a href="{% url 'ajout_annonce' %}" >Poster une annonce</a></li>
-                                  <li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
+                        <li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
                     {% else %}
                                   <li><a href="{% url 'connexion' %}" >Connexion</a></li>
                         <li><a href="{% url 'inscription' %}" >S'inscrire</a></li>
                     {% endif %}
+                <li>
+                  <a class="btn btn-default btn-outline btn-circle"  data-toggle="collapse" href="#nav-collapse2"
+                     aria-expanded="false" aria-controls="nav-collapse2">Recherche</a>
+                </li>
                 </ul>
             </div>
            
