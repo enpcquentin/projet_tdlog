@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from annonces.models import UserProfile, Annonce
+from annonces.models import UserProfile, Annonce, Categorie
 
 
 class ConnexionForm(forms.Form):
@@ -28,3 +28,9 @@ class AnnonceForm(forms.ModelForm):
     class Meta:
         model = Annonce
         fields = ('titre', 'categorie', 'descriptif')
+
+class VoirAnnonces(forms.ModelForm):
+
+    class Meta:
+        model = Annonce
+        fields = ('categorie', )

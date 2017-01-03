@@ -4,7 +4,7 @@ from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
 from django.utils import timezone
-from annonces.forms import UserProfileForm, UserForm, AnnonceForm
+from annonces.forms import UserProfileForm, UserForm, AnnonceForm, VoirAnnonces
 
 
 from annonces.models import UserProfile, Annonce
@@ -111,7 +111,7 @@ def ajout_annonce(request):
             annonce = annonce_form.save(commit=False)
             annonce.auteur = request.user
             annonce.date = timezone.now()
-            
+
             annonce.ville = request.POST.get('ville')
             annonce.numero = request.POST.get('numero')
             annonce.region = request.POST.get('region')
@@ -137,3 +137,19 @@ def ajout_annonce(request):
 
     # Render the template depending on the context.
     return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
+
+
+def voir_annonces(request):
+
+    test = False
+    if request.method == 'POST':
+        form = VoirAnnonces(data=request.POST)
+        if form.is_valid():
+            cat = form.save(commit = False)
+            test = True
+            annonces = Annonce.objects.filter(categorie = cat.categorie)
+    else:
+        form = VoirAnnonces()
+        annonces = Annonce.objects.all()
+    print(form.errors) # form not submitted or it has errors
+    return render(request, 'annonces/voir_annonces.html', {'form': form, 'annonces': annonces, 'test': test})

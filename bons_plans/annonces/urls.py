@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^inscription$', views.inscription, name='inscription'),
     url(r'^deconnexion$', views.deconnexion, name='deconnexion'),
     url(r'^ajout_annonce$', views.ajout_annonce, name='ajout_annonce'),
+    url(r'^voir_annonces$', views.voir_annonces, name='voir_annonces'),
 ]
