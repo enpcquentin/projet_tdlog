@@ -4,9 +4,10 @@
 
 {% block content %}
 {% if posted %}
-        <strong>Merci d'avoir posté une annonce !</strong>
+        <strong>Merci d'avoir posté une annonce !</font></strong>
 {% else %}
-        <strong>Postez votre annonce ici : </strong><br />
+<div><p>
+        <strong><font size ='5'>Postez votre annonce ici : </font></strong><br>
 
         <form id="annonce_form" method="post" action="{% url 'ajout_annonce' %}"
                 enctype="multipart/form-data">
@@ -115,6 +116,7 @@ function fillInAddress() {
             <!-- Provide a button to click to submit the form. -->
             <input type="submit" name="submit" value="Poster l'annonce" />
         </form>
+</div></p>
 {% endif %}
 
 {% endblock %}
