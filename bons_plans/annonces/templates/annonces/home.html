@@ -24,13 +24,13 @@
 
 
 {% block content %}
-<article style="float: left;  margin: 0 1.5%; width: 63%;">
+<article style="float: left;  margin: 0 1.5%; width: 50%;">
 
     <div id="map"></div>
     <script>
     function addInfoWindowToMarker(map, marker, content_bulle) {
                       var infoWindow = new google.maps.InfoWindow({
-                          content: content_bulle  
+                          content: content_bulle
                       });
                       google.maps.event.addListener(marker, 'click', function() {
                           infoWindow.open(map,this)
@@ -139,7 +139,7 @@
                         <div class="item">
                             <div class="container center">
                                 <div class="col-md-6 col-md-offset-3 slide-custom">
-                                   
+
                                     <h4><i class="fa fa-quote-left"></i>
                                          {{annonces.0.descriptif}}
                                         <i class="fa fa-quote-right"></i></h4>
@@ -184,4 +184,3 @@
 
 
 {% endblock %}
-

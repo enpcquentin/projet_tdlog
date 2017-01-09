@@ -5,11 +5,12 @@
 {% block content %}
 
 {% if test %}
-          <p>
-          {% for annonce in annonces %}
-                <td>{{ annonce.titre }}</td><br>
-          {% endfor %}
-          </p>
+<div><p>
+  <strong><font size = '5'> {{ categorie }} à {{ ville }} : </font></strong><br>
+    {% for annonce in annonces %}
+      <a href="{% url 'annonce_detail' pk=annonce.pk %}" > {{ annonce.titre }}</a><br>
+    {% endfor %}
+</div></p>
 
 {% else %}
 <div><p>

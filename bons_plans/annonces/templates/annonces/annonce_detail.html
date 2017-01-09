@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<article style="float: left;  margin: 0 1.5%; width: 50%;">
+
+<div>
+<p><font size ='5'><b> {{ object.titre }} </b></font></p>
+<p><b> Catégorie : </b> {{ object.categorie }} <br>
+<b> Adresse : </b> {{ object.numero }} {{ object.rue }}, {{ object.code_postal}} {{ object.ville }}, {{ object.region }}, {{ object.pays }} </p>
+Publiée le {{ object.date }}, par {{ object.auteur }} <br></p>
+<p><b> Description : </b> {{ object.descriptif }} </p>
+</div>
+
+</article>
+
+<aside>
+
+  <div id="map"></div>
+  <script>
+  function addInfoWindowToMarker(map, marker, content_bulle) {
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: content_bulle
+                    });
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infoWindow.open(map,this)
+                    });
+                }
+    function initMap() {
+                    // coordonnees de ville
+                      var lieu = new google.maps.LatLng({{object.lat | stringformat:"f"}}, {{object.long | stringformat:"f"}});
+
+                      // recuperation de l'element HTML sur lequel afficher la carte
+                      var mapCanvas = document.getElementById("map");
+
+                      // creation effective de la carte
+                      var mapOptions = {
+                        center: lieu,
+                        zoom: 17,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                      };
+                      var map = new google.maps.Map(mapCanvas, mapOptions);
+
+
+                      var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+                      var icons = {
+                        Ballade: {
+                          icon: iconBase + 'hiker_maps.png'
+                        },
+                        Échange: {
+                          icon: iconBase + 'info-i_maps.png'
+                        },
+                        Restaurant: {
+                          icon: iconBase + 'dining_maps.png'
+                        },
+                        Service: {
+                          icon: iconBase + 'mechanic_maps.png'
+                        }
+                      };
+                      // definition du marqueur et ajout a la carte
+                      var markOptions = {
+                        position: lieu,
+                        map: map,
+                        icon : icons["{{ object.categorie }}"].icon,
+                      };
+                      var mark = new google.maps.Marker(markOptions);
+
+                      addInfoWindowToMarker(map, mark, "{{object.titre}}");
+    }
+  </script>
+
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCz7usmwU_bwE46NxmQlKepw5a0GF2IYA&callback=initMap">
+  </script>
+
+</aside>
+
+
+{% endblock %}

@@ -4,13 +4,14 @@ from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
 from django.utils import timezone
+from django.views.generic.detail import DetailView
 from annonces.forms import UserProfileForm, UserForm, AnnonceForm, VoirAnnonces
-
-
 from annonces.models import UserProfile, Annonce
 
 
 def home(request):
+    """ Page d'accueil """
+
     list_profils=[]
     for profil in UserProfile.objects.all():
         list_profils.append(profil)
@@ -22,6 +23,7 @@ def home(request):
 def connexion(request):
     """Vue de connexion. Si les informations renseignées sont correctes, connecte l'utilisateur
     et le redirige vers la page d'accueil"""
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -50,6 +52,7 @@ def connexion(request):
 
 def inscription(request):
     """Vue d'inscription qui enregistre l'entrée utilisateur, l'entrée profil et les relie entre eux"""
+
     registered = False
 
     # If it's a HTTP POST, we're interested in processing form data.
@@ -89,11 +92,14 @@ def inscription(request):
 
 
 def deconnexion(request):
+    """ Vue de déconnexion """
+
     logout(request)
     return redirect(reverse(connexion))
 
 
 def ajout_annonce(request):
+    """ Vue pour ajouter une annonce """
 
     # A boolean value for telling the template whether the post was successful.
     # Set to False initially. Code changes value to True when post succeeds.
@@ -140,6 +146,7 @@ def ajout_annonce(request):
 
 
 def voir_annonces(request):
+    """ Vue pour rechercher des annonces par attributs """
 
     test = False
     if request.method == 'POST':
@@ -147,9 +154,23 @@ def voir_annonces(request):
         if form.is_valid():
             cat = form.save(commit = False)
             test = True
-            annonces = Annonce.objects.filter(categorie = cat.categorie)
+            categorie = cat.categorie
+            ville = cat.ville
+            annonces = Annonce.objects.filter(categorie = categorie, ville = ville)
     else:
         form = VoirAnnonces()
         annonces = Annonce.objects.all()
+        ville = ""
+        categorie = ""
     print(form.errors) # form not submitted or it has errors
-    return render(request, 'annonces/voir_annonces.html', {'form': form, 'annonces': annonces, 'test': test})
+    return render(request, 'annonces/voir_annonces.html', {'form': form, 'annonces': annonces, 'test': test, 'ville': ville, 'categorie': categorie})
+
+
+class AnnonceDetailView(DetailView):
+
+    model = Annonce
+
+    def get_context_data(self, **kwargs):
+        context = super(AnnonceDetailView, self).get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context

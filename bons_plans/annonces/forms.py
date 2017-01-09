@@ -33,4 +33,4 @@ class VoirAnnonces(forms.ModelForm):
 
     class Meta:
         model = Annonce
-        fields = ('categorie', )
+        fields = ('categorie', 'ville')
