@@ -129,12 +129,12 @@ def ajout_annonce(request):
         annonce_form = AnnonceForm()
 
     return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
-    
-    
+
     
 def profil(request):
     modified = False
     profile = request.user.userprofile
+    print(profile.user)
     if request.method == 'POST':
         profile_form = UserProfileForm(data=request.POST, instance=profile)
         if profile_form.is_valid():
@@ -151,15 +151,6 @@ def profil(request):
             profile.rue = request.POST.get('rue')
             profile.lat = float(request.POST.get('cityLat'))
             profile.long = float(request.POST.get('cityLng'))
-
-            # profile.ville = request.POST.get('ville', profile.ville)
-            # profile.numero = request.POST.get('numero', profile.numero)
-            # profile.region = request.POST.get('region', profile.region)
-            # profile.pays = request.POST.get('pays', profile.pays)
-            # profile.code_postal = request.POST.get('code_postal', profile.code_postal)
-            # profile.rue = request.POST.get('rue', profile.rue)
-            # profile.lat = float(request.POST.get('cityLat', profile.lat))
-            # profile.long = float(request.POST.get('cityLng', profile.long))
 
             profile.save()
             modified = True

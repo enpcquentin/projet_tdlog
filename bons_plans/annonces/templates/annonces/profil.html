@@ -10,8 +10,7 @@
 
             {% csrf_token %}
             {{ profile_form.as_p }}
-            <input type="submit" name="submit" value="Modifier mon profil" />
-        </form>
+
   <body>
     <div id="locationField">
       <input id="autocomplete" placeholder="Enter your address"
@@ -105,5 +104,8 @@ function fillInAddress() {
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCz7usmwU_bwE46NxmQlKepw5a0GF2IYA&signed_in=true&libraries=places&callback=initAutocomplete"
         async defer></script>
   </body>
+                      <input type="submit" name="submit" value="Modifier mon profil" />
+          </form>
+
 
 {% endblock %}
