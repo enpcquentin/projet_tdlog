@@ -45,7 +45,6 @@ def connexion(request):
         return render(request, 'annonces/connexion.html', {})
 
 
-
 def inscription(request):
     """Vue d'inscription qui enregistre l'entrée utilisateur, l'entrée profil et les relie entre eux"""
 
@@ -81,7 +80,7 @@ def inscription(request):
             # on signale au template que l'enregistrement s'est correctement réalisé
             registered = True
         else:
-            print( user_form.errors, profile_form.errors)
+            print(user_form.errors, profile_form.errors)
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
@@ -130,8 +129,51 @@ def ajout_annonce(request):
         annonce_form = AnnonceForm()
 
     return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
+    
+    
+    
+def profil(request):
+    modified = False
+    profile = request.user.userprofile
+    if request.method == 'POST':
+        profile_form = UserProfileForm(data=request.POST, instance=profile)
+        if profile_form.is_valid():
+            profile_form.save(commit=False)
 
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
 
+            profile.ville = request.POST.get('ville')
+            profile.numero = request.POST.get('numero')
+            profile.region = request.POST.get('region')
+            profile.pays = request.POST.get('pays')
+            profile.code_postal = request.POST.get('code_postal')
+            profile.rue = request.POST.get('rue')
+            profile.lat = float(request.POST.get('cityLat'))
+            profile.long = float(request.POST.get('cityLng'))
+
+            # profile.ville = request.POST.get('ville', profile.ville)
+            # profile.numero = request.POST.get('numero', profile.numero)
+            # profile.region = request.POST.get('region', profile.region)
+            # profile.pays = request.POST.get('pays', profile.pays)
+            # profile.code_postal = request.POST.get('code_postal', profile.code_postal)
+            # profile.rue = request.POST.get('rue', profile.rue)
+            # profile.lat = float(request.POST.get('cityLat', profile.lat))
+            # profile.long = float(request.POST.get('cityLng', profile.long))
+
+            profile.save()
+            modified = True
+        else:
+            print(profile_form.errors)
+    else:
+        profile_form = UserProfileForm(instance=profile)
+
+    # Renvoit le template prenant en compte les differents cas
+    return render(request,
+                  'annonces/profil.html',
+                  {'profile_form': profile_form, 'modified': modified})
+
+    
 def voir_annonces(request):
     """ Vue pour rechercher des annonces par attributs """
 
