@@ -29,14 +29,10 @@ def connexion(request):
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
 
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
         if user:
-            # Is the account active? It could have been disabled.
+            # on vérifie que le compte courant est valide et actif
+            # si c'est le cas, on connecte l'utilisateur
             if user.is_active:
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
                 login(request, user)
                 return HttpResponseRedirect('/annonces/home')
             else:
@@ -53,20 +49,23 @@ def connexion(request):
 def inscription(request):
     """Vue d'inscription qui enregistre l'entrée utilisateur, l'entrée profil et les relie entre eux"""
 
+    # un booléan pour tester la validation de l'enregistrement
     registered = False
 
-    # If it's a HTTP POST, we're interested in processing form data.
+    # on a besoin d'une méthode POST pour le formulaire
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileForm(data=request.POST)
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
             user.set_password(user.password)
-            user.save()  # Sauvegarde de l'entrée utilisateur
+            # sauvegarde de l'entrée utilisateur
+            user.save()
 
             profile = profile_form.save(commit=False)
             profile.user = user
-            if 'picture' in request.FILES: # Sauvegarde de la photo de profil si elle existe
+            if 'picture' in request.FILES:
+                # sauvegarde de la photo de profil si elle existe
                 profile.picture = request.FILES['picture']
 
             profile.ville = request.POST.get('ville')
@@ -77,15 +76,16 @@ def inscription(request):
             profile.rue = request.POST.get('rue')
             profile.lat = float(request.POST.get('cityLat'))
             profile.long = float(request.POST.get('cityLng'))
-
-            profile.save()  # Sauvegarde de l'entrée profil
-            # Update our variable to tell the template registration was successful.
+            # sauvegarde de l'entrée profil
+            profile.save()
+            # on signale au template que l'enregistrement s'est correctement réalisé
             registered = True
         else:
             print( user_form.errors, profile_form.errors)
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
+
     return render(request,
                   'annonces/inscription.html',
                   {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
@@ -101,23 +101,18 @@ def deconnexion(request):
 def ajout_annonce(request):
     """ Vue pour ajouter une annonce """
 
-    # A boolean value for telling the template whether the post was successful.
-    # Set to False initially. Code changes value to True when post succeeds.
+    # un booléen pour tester la validation de la demande
     posted = False
 
-    # If it's a HTTP POST, we're interested in processing form data.
+    # on a besoin d'une méthode POST pour le formulaire
     if request.method == 'POST':
-        # Attempt to grab information from the raw form information.
-        # Note that we make use of both UserForm and UserProfileForm.
         annonce_form = AnnonceForm(data=request.POST)
-
-        # If the form is valid...
+        # on teste la validité du formulaire
         if annonce_form.is_valid():
-            # Save the user's form data, but commit=False doesn't send it right now to the database
+            # commit = False pour ne pas sauvegarder dans la BDD tout de suite
             annonce = annonce_form.save(commit=False)
             annonce.auteur = request.user
             annonce.date = timezone.now()
-
             annonce.ville = request.POST.get('ville')
             annonce.numero = request.POST.get('numero')
             annonce.region = request.POST.get('region')
@@ -127,46 +122,48 @@ def ajout_annonce(request):
             annonce.lat = float(request.POST.get('cityLat'))
             annonce.long = float(request.POST.get('cityLng'))
             annonce.save()
-            # Update our variable to tell the template registration was successful.
+            # on signale au template que l'ajout s'est correctement passé
             posted = True
-
-        # Invalid form or forms - mistakes or something else?
-        # Print problems to the terminal.
-        # They'll also be shown to the user.
         else:
             print(annonce_form.errors)
-
-    # Not a HTTP POST, so we render our form using two ModelForm instances.
-    # These forms will be blank, ready for user input.
     else:
         annonce_form = AnnonceForm()
 
-    # Render the template depending on the context.
     return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
 
 
 def voir_annonces(request):
     """ Vue pour rechercher des annonces par attributs """
 
+    # un booléen pour tester la validation de la demande
     test = False
+
     if request.method == 'POST':
         form = VoirAnnonces(data=request.POST)
+        # on teste la validité du formulaire
         if form.is_valid():
+            # commit = False pour ne pas sauvegarder dans la BDD
+            # on ne souhaite pas crée un nouvel élément dans la BDD mais juste l'interroger
             cat = form.save(commit = False)
             test = True
             categorie = cat.categorie
             ville = cat.ville
+            # interrogation de la BDD
             annonces = Annonce.objects.filter(categorie = categorie, ville = ville)
+        else:
+            print(form.errors)
+    # cas en pratique jamais atteint
     else:
         form = VoirAnnonces()
         annonces = Annonce.objects.all()
         ville = ""
         categorie = ""
-    print(form.errors) # form not submitted or it has errors
+
     return render(request, 'annonces/voir_annonces.html', {'form': form, 'annonces': annonces, 'test': test, 'ville': ville, 'categorie': categorie})
 
 
 class AnnonceDetailView(DetailView):
+    """ Vue pour n'afficher qu'une annonce en particulier de la BDD, grâce au clés primaires """
 
     model = Annonce
 
