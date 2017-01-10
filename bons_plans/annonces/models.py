@@ -6,10 +6,11 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     """Modèle de profil, lié à chaque compte utilisateur"""
-    # On relie chaque instance UserProfile a une instance de User
+
+    # on relie chaque instance UserProfile a une instance de User
     user = models.OneToOneField(User)
 
-    # Autres attributs
+    # autres attributs
     website = models.URLField(blank=True)
     numero = models.IntegerField(default=2)
     rue = models.CharField(max_length=100, default='Allée de la Noiseraie')
@@ -26,17 +27,22 @@ class UserProfile(models.Model):
         return self.user.username
 
 
-# différentes catégorie possibles
-# peut être les créer à la main via l'interface d'administration ?
+
+
 class Categorie(models.Model):
+    """ Différentes catégorie possibles
+    Elles ont été créées à la main via l'interface d'administration Django """
+
     nom = models.CharField(max_length=30)
 
     def __str__(self):
         return self.nom
 
 
-# modèle d'annonce avec plusieurs attributs
+
 class Annonce(models.Model):
+    """ Modèle d'annonce avec plusieurs attributs """
+
     titre = models.CharField(max_length=100)
     categorie = models.ForeignKey('Categorie')
     auteur = models.ForeignKey(User)
