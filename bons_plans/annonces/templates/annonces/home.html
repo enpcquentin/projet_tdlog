@@ -5,22 +5,6 @@
 
 
 
-<!--
-<div id="bloc_page">
-<div id="banniere_image">
-    <div id="banniere_description">
-        <strong> Dernière annonce parue : </strong> <br>
-          {% if annonce %}
-            {% for a in annonce %}
-              <strong> Titre : </strong> {{ a.titre }} <br>
-              <strong> Descriptif : </strong> {{ a.descriptif }}
-            {% endfor %}
-          {% else %}
-            Il n'y a aucune annonce ...
-          {% endif %}
-    </div>
-</div>
-</div>  -->
 
 
 {% block content %}
@@ -28,12 +12,20 @@
 
     <div id="map"></div>
     <script>
+
+    function visibilite(content_bulle) {
+      document.getElementById("affichage_annonce").style.visibility = "visible";
+      var div = document.getElementById("affichage_annonce");  
+      div.textContent = content_bulle;  
+      var text = div.textContent;    
+    }
     function addInfoWindowToMarker(map, marker, content_bulle) {
                       var infoWindow = new google.maps.InfoWindow({
                           content: content_bulle
                       });
                       google.maps.event.addListener(marker, 'click', function() {
-                          infoWindow.open(map,this)
+                          infoWindow.open(map,this);
+                          visibilite(content_bulle);
                       });
                   }
       function initMap() {
@@ -110,7 +102,12 @@
 
 <aside>
 
+<div id="affichage_annonce" style="visibility:hidden;" > </div>
 
+<script type="text/javascript">
+
+
+</script>  
 
 </aside>
 
