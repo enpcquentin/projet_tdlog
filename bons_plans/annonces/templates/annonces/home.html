@@ -13,19 +13,24 @@
     <div id="map"></div>
     <script>
 
-    function visibilite(content_bulle) {
+    function visibilite(content_bulle,descriptif) {
       document.getElementById("affichage_annonce").style.visibility = "visible";
       var div = document.getElementById("affichage_annonce");  
       div.textContent = content_bulle;  
-      var text = div.textContent;    
+      var text = div.textContent;
+
+      document.getElementById("affichage_descriptif").style.visibility = "visible";
+      var div = document.getElementById("affichage_descriptif");  
+      div.textContent = descriptif;  
+      var text = div.textContent;      
     }
-    function addInfoWindowToMarker(map, marker, content_bulle) {
+    function addInfoWindowToMarker(map, marker, content_bulle, descriptif, pk ) {
                       var infoWindow = new google.maps.InfoWindow({
                           content: content_bulle
                       });
                       google.maps.event.addListener(marker, 'click', function() {
                           infoWindow.open(map,this);
-                          visibilite(content_bulle);
+                          visibilite(content_bulle,descriptif,pk);
                       });
                   }
       function initMap() {
@@ -54,7 +59,7 @@
                           title: "voir le profil"
                         };
                         var mark = new google.maps.Marker(markOptions);
-                        addInfoWindowToMarker(map, mark, "{{profil.user.username}}");
+                        addInfoWindowToMarker(map, mark, "{{profil.user.username}}","");
 
                         {% endfor %}
 
@@ -87,7 +92,7 @@
                         };
                         var mark = new google.maps.Marker(markOptions);
 
-                        addInfoWindowToMarker(map, mark, "{{add.titre}}");
+                        addInfoWindowToMarker(map, mark, "{{add.titre}}", "{{add.descriptif}}");
 
 
                         {% endfor %}
@@ -103,6 +108,9 @@
 <aside>
 
 <div id="affichage_annonce" style="visibility:hidden;" > </div>
+<div id="affichage_descriptif" style="visibility:hidden;" > </div>
+
+
 
 <script type="text/javascript">
 
@@ -141,7 +149,7 @@
                                          {{annonces.0.descriptif}}
                                         <i class="fa fa-quote-right"></i></h4>
                                      <div class="user-img pull-right">
-                        <img src="/{{annonces.0.auteur.picture}}" alt="" class="img-u image-responsive img-circle">
+                        <img src="\static\img\{{annonces.0.categorie}}.jpg" alt="" class="img-u image-responsive img-circle">
                     </div>
                                     <h5 class="pull-right"><strong class="c-set" >{{annonces.0.categorie}}</strong></h5>
                                 </div>
@@ -154,7 +162,7 @@
                                          <div class="user-img pull-right">
 
 
-                        <img src="/{{annonces.1.auteur.picture}}" alt="" class="img-u image-responsive">
+                        <img src="\static\img\{{annonces.1.categorie}}.jpg" alt="" class="img-u image-responsive">
                     </div>
                                     <h5 class="pull-right"><strong class="c-set" > {{annonces.1.categorie}} </strong></h5>
                                 </div>
@@ -166,7 +174,7 @@
                                     <h4><i class="fa fa-quote-left"></i> {{annonces.2.descriptif}} <i class="fa fa-quote-right"></i></h4>
                                         <div class="user-img pull-right">
 
-                        <img src="/{{annonces.2.auteur.picture}}" alt="" class="img-u image-responsive">
+                        <img src="\static\img\{{annonces.2.categorie}}.jpg" alt="" class="img-u image-responsive">
                     </div>
                                     <h5 class="pull-right"><strong class="c-set">  {{annonces.2.categorie}}  </strong></h5>
                                 </div>
