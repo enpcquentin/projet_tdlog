@@ -4,56 +4,56 @@
 
 {% block content %}
 {% if posted %}
-        <strong>Merci d'avoir posté une annonce !</font></strong>
+<strong>Merci d'avoir posté une annonce !</font></strong>
 {% else %}
 <div><p>
-        <strong><font size ='5'>Postez votre annonce ici : </font></strong><br>
+    <strong><font size ='5'>Postez votre annonce ici : </font></strong><br>
 
-        <form id="annonce_form" method="post" action="{% url 'ajout_annonce' %}"
-                enctype="multipart/form-data">
+    <form id="annonce_form" method="post" action="{% url 'ajout_annonce' %}"
+          enctype="multipart/form-data">
 
-            {% csrf_token %}
-            {{ annonce_form.as_p }}
+        {% csrf_token %}
+        {{ annonce_form.as_p }}
 
-              <body>
-    <div id="locationField">
-      <input id="autocomplete" placeholder="Enter your address"
-             onFocus="geolocate()" type="text"></input>
-    </div>
+        <body>
+        <div id="locationField">
+            <input id="autocomplete" placeholder="Enter your address"
+                   onFocus="geolocate()" type="text"></input>
+        </div>
 
-    <table id="address">
-      <tr>
-        <td class="label">Adresse</td>
-        <td class="slimField"><input class="field" id="street_number" name="numero"
-              disabled="true"></input></td>
-        <td class="wideField" colspan="2"><input class="field" id="route" name="rue"
-              disabled="true"></input></td>
-      </tr>
-      <tr>
-        <td class="label">Ville</td>
-        <td class="wideField" colspan="3"><input class="field" id="locality" name="ville"
-              disabled="true"></input></td>
-      </tr>
-      <tr>
-        <td class="label">Region</td>
-        <td class="slimField"><input class="field"
-              id="administrative_area_level_1" name="region" disabled="true"></input></td>
-        <td class="label">Code Postal</td>
-        <td class="wideField"><input class="field" id="postal_code" name="code_postal"
-              disabled="true"></input></td>
-      </tr>
-      <tr>
-        <td class="label">Pays</td>
-        <td class="wideField" colspan="3"><input class="field" name="pays"
-              id="country" disabled="true"></input></td>
-      </tr>
+        <table id="address">
+            <tr>
+                <td class="label">Adresse</td>
+                <td class="slimField"><input class="field" id="street_number" name="numero"
+                                             disabled="true"></input></td>
+                <td class="wideField" colspan="2"><input class="field" id="route" name="rue"
+                                                         disabled="true"></input></td>
+            </tr>
+            <tr>
+                <td class="label">Ville</td>
+                <td class="wideField" colspan="3"><input class="field" id="locality" name="ville"
+                                                         disabled="true"></input></td>
+            </tr>
+            <tr>
+                <td class="label">Region</td>
+                <td class="slimField"><input class="field"
+                                             id="administrative_area_level_1" name="region" disabled="true"></input></td>
+                <td class="label">Code Postal</td>
+                <td class="wideField"><input class="field" id="postal_code" name="code_postal"
+                                             disabled="true"></input></td>
+            </tr>
+            <tr>
+                <td class="label">Pays</td>
+                <td class="wideField" colspan="3"><input class="field" name="pays"
+                                                         id="country" disabled="true"></input></td>
+            </tr>
 
-      <input type="hidden" id="cityLat" name="cityLat" />
-      <input type="hidden" id="cityLng" name="cityLng" />
+            <input type="hidden" id="cityLat" name="cityLat" />
+            <input type="hidden" id="cityLng" name="cityLng" />
 
-    </table>
+        </table>
 
-    <script>
+        <script>
 
 var placeSearch, autocomplete;
 var componentForm = {
@@ -105,12 +105,12 @@ function fillInAddress() {
 
 
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCz7usmwU_bwE46NxmQlKepw5a0GF2IYA&signed_in=true&libraries=places&callback=initAutocomplete"
-        async defer></script>
-  </body>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCz7usmwU_bwE46NxmQlKepw5a0GF2IYA&signed_in=true&libraries=places&callback=initAutocomplete"
+                async defer></script>
+        </body>
 
-            <input type="submit" name="submit" value="Poster l'annonce" />
-        </form>
+        <input type="submit" name="submit" value="Poster l'annonce" />
+    </form>
 </div></p>
 {% endif %}
 

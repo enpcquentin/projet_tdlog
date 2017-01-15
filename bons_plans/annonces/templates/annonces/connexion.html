@@ -4,19 +4,19 @@
 
 {% block content %}
 
-        <form id="login_form" method="post" action="{% url 'connexion' %}">
-            {% csrf_token %}
+<form id="login_form" method="post" action="{% url 'connexion' %}">
+    {% csrf_token %}
 
-        <td> <strong> Utilisateur  </strong>  </td>
+    <td> <strong> Utilisateur  </strong>  </td>
 
-            <input type="text" name="username" value="" size="50" />
-            <br />
-        <td> <strong>  Mot de passe  </strong>  </td>
+    <input type="text" name="username" value="" size="50" />
+    <br />
+    <td> <strong>  Mot de passe  </strong>  </td>
 
-<input type="password" name="password" value="" size="50" />
-            <br />
+    <input type="password" name="password" value="" size="50" />
+    <br />
 
-            <input type="submit" value="Connexion" />
+    <input type="submit" value="Connexion" />
 
-        </form>
+</form>
 {% endblock %}

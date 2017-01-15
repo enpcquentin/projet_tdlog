@@ -1,25 +1,25 @@
 {% load static %}
-    <head>
-        <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8" />
 
 
-            <!--REQUIRED STYLE SHEETS-->
+    <!--REQUIRED STYLE SHEETS-->
     <!-- BOOTSTRAP CORE STYLE CSS -->
     <link href="/static/css/bootstrap.css" rel="stylesheet" />
     <!-- FONTAWESOME STYLE CSS -->
     <link href="/static/css/font-awesome.min.css" rel="stylesheet" />
-       <!-- CUSTOM STYLE CSS -->
+    <!-- CUSTOM STYLE CSS -->
     <link href="/static/css/style.css" rel="stylesheet" />
-        <title> {% block title %} {% endblock %} </title>
+    <title> {% block title %} {% endblock %} </title>
 
-    </head>
+</head>
 
-    <body>
-    <div id="bloc_page">
+<body>
+<div id="bloc_page">
 
 
     <!-- NAV SECTION -->
-         <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-default navbar-fixed-top">
 
         <div class="container">
             <div class="navbar-header">
@@ -33,80 +33,88 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{% url 'home' %}" >Accueil</a></li>
-<!--
-                    <li><a href="#">Recherche</a></li>
--->
+
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'voir_annonces' %}" >Voir les annonces</a></li>
-                        <li><a href="{% url 'ajout_annonce' %}" >Poster une annonce</a></li>
-                        <li><a href="{% url 'profil' %}" >Mon profil</a></li>
-                        <li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
+                    <li><a href="{% url 'voir_annonces' %}" >Voir les annonces</a></li>
+                    <li><a href="{% url 'ajout_annonce' %}" >Poster une annonce</a></li>
+                    <li><a href="{% url 'profil' %}" >Mon profil</a></li>
+                    <li><a href="{% url 'deconnexion' %}" >Déconnexion</a></li>
+
                     {% else %}
-                                  <li><a href="{% url 'connexion' %}" >Connexion</a></li>
-                        <li><a href="{% url 'inscription' %}" >S'inscrire</a></li>
+                    <li><a href="{% url 'connexion' %}" >Connexion</a></li>
+                    <li><a href="{% url 'inscription' %}" >S'inscrire</a></li>
+
+
                     {% endif %}
-                <li>
-                  <a class="btn btn-default btn-outline btn-circle"  data-toggle="collapse" href="#nav-collapse2"
-                     aria-expanded="false" aria-controls="nav-collapse2">Recherche</a>
-                </li>
+                    <li>
+                        <a class="btn btn-default btn-outline btn-circle"  data-toggle="collapse" href="#nav-collapse3" aria-expanded="false" aria-controls="nav-collapse3">Recherche</a>
+                    </li>
                 </ul>
-            </div>
+                <div class="collapse nav navbar-nav nav-collapse" id="nav-collapse3">
+                    <form class="navbar-form navbar-right" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search" />
+                        </div>
+                        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </form>
+                </div>
 
+            </div>
         </div>
     </div>
-     <!--END NAV SECTION -->
+    <!--END NAV SECTION -->
 
-   <!--HOME SECTION-->
+    <!--HOME SECTION-->
     <div id="home-sec">
-    <div class="container"  >
-        <div class="row text-center">
-            <div  class="col-md-12" >
-                <span class="head-main" > Les Bons Plans Près De Chez Vous</span>
-                <h3 class="head-last col-md-8 col-md-offset-2  col-sm-8 col-sm-offset-2">Restaurants, Ballades, Services et Echanges</h3>
+        <div class="container"  >
+            <div class="row text-center">
+                <div  class="col-md-12" >
+                    <span class="head-main" > Les Bons Plans Près De Chez Vous</span>
+                    <h3 class="head-last col-md-8 col-md-offset-2  col-sm-8 col-sm-offset-2">Restaurants, Ballades, Services et Echanges</h3>
+                </div>
             </div>
         </div>
-    </div>
 
     </div>
-     <!--END HOME SECTION-->
-     <!--ABOUT SECTION-->
+    <!--END HOME SECTION-->
+    <!--ABOUT SECTION-->
     <div style="display: flex; margin: 50px;"  >
-    {% block content %}
+        {% block content %}
 
-
-    {% endblock %}
-    </div>
-    <!--END ABOUT SECTION-->
-     <!-- TESTIMONIAL SECTION-->
-    <section id="testimonial" >
-        {% block lastnews %}
-{% endblock %}
-
-        </section>
-     <!--END TESTIMONIAL SECTION-->
-
-
-
-
-        {% block timeline %}
 
         {% endblock %}
+    </div>
+    <!--END ABOUT SECTION-->
+    <!-- TESTIMONIAL SECTION-->
+    <section id="testimonial" >
+        {% block lastnews %}
+        {% endblock %}
+
+    </section>
+    <!--END TESTIMONIAL SECTION-->
 
 
-			  <footer>
-            <div id="tweet">
-                <h1>Les créateurs</h1>
-                <p>Gaspard, Pierre et Quentin</p>
-            </div>
-        </footer>
+
+
+    {% block timeline %}
+
+    {% endblock %}
+
+
+    <footer>
+        <div id="tweet">
+            <h1>Les créateurs</h1>
+            <p>Gaspard, Pierre et Quentin</p>
+        </div>
+    </footer>
 </div>
 
 
 <!-- NECESSAIRE POUR FAIRE FONCTIONNER LE CAROUSSEL -->
-    <script src="/static/plugins/jquery-1.10.2.js"></script>
-    <!-- BOOTSTRAP CORE SCRIPT   -->
-    <script src="/static/plugins/bootstrap.min.js"></script>
-    <!-- CUSTOM SCRIPTS -->
-    <script src="/static/js/custom.js"></script>
+<script src="/static/plugins/jquery-1.10.2.js"></script>
+<!-- BOOTSTRAP CORE SCRIPT   -->
+<script src="/static/plugins/bootstrap.min.js"></script>
+<!-- CUSTOM SCRIPTS -->
+<script src="/static/js/custom.js"></script>
 
-    </body>
+</body>

@@ -6,23 +6,23 @@
 
 {% if test %}
 <div><p>
-  <strong><font size = '5'> {{ categorie }} à {{ ville }} : </font></strong><br>
+    <strong><font size = '5'> {{ categorie }} à {{ ville }} : </font></strong><br>
     {% for annonce in annonces %}
-      <a href="{% url 'annonce_detail' pk=annonce.pk %}" > {{ annonce.titre }}</a><br>
+    <a href="{% url 'annonce_detail' pk=annonce.pk %}" > {{ annonce.titre }}</a><br>
     {% endfor %}
 </div></p>
 
 {% else %}
 <div><p>
-<strong><font size = '5'>Sélectionnez la catégorie qui vous intéresse : </font></strong><br>
+    <strong><font size = '5'>Sélectionnez la catégorie qui vous intéresse : </font></strong><br>
 
-        <form id="form" method="post" action="{% url 'voir_annonces' %}" enctype="multipart/form-data">
+    <form id="form" method="post" action="{% url 'voir_annonces' %}" enctype="multipart/form-data">
 
-            {% csrf_token %}
-            {{ form.as_p }}
+        {% csrf_token %}
+        {{ form.as_p }}
 
-            <input type="submit" name="submit" value="Chercher" />
-        </form>
+        <input type="submit" name="submit" value="Chercher" />
+    </form>
 </div></p>
 
 {% endif %}
