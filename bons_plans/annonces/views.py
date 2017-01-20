@@ -11,6 +11,15 @@ from annonces.models import UserProfile, Annonce
 
 def home(request):
     """ Page d'accueil """
+    
+    if request.method == 'POST':
+        note = int(request.POST.get('mark'))
+        cle = int(request.POST.get('key'))
+        assert(cle in [0,1,2,3,4,5,6,7,8,9])
+        add = Annonce.objects.get(id__iexact=cle)
+        add.somme_notes += note
+        add.nb_votes += 1
+        add.save()
 
     list_profils=[]
     for profil in UserProfile.objects.all():

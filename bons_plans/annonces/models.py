@@ -57,6 +57,9 @@ class Annonce(models.Model):
     ville = models.CharField(max_length=100, default='Noisy-le-Grand')
     lat = models.FloatField(default=48.8411)
     long = models.FloatField(default=2.5880)
+    somme_notes = models.IntegerField(default=0)
+    nb_votes = models.IntegerField(default=0)
+
 
     def __str__(self):
         return self.titre

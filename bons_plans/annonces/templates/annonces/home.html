@@ -8,12 +8,75 @@
 
 
 {% block content %}
+
+<!-- Javascript pour le système de notation -->
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<head>
+<script>
+<!-- 
+StarOutUrl=   '/static/img/star0.gif';    //image par défaut
+StarOverUrl=    '/static/img/star.gif';   //image d'une étoile sélectionnée
+StarBaseId=   'Star';     //id de base des étoiles
+NbStar=     5;     //nombre d'étoiles
+
+LgtStarBaseId=StarBaseId.lastIndexOf('');
+
+function NotationSystem(cle) { //le paramètre cle désigne la clé primaire de l'annonce associée
+    
+      document.getElementById('key').value = cle;
+
+  for (i=1;i<NbStar+1;i++) {
+    var img     =document.getElementById('Star'+i);
+      
+    img.onclick   =function() {alert('Vous souhaitez donner la note de '+Name2Nb(this.id)+'.' +' Appuyez sur le bouton Voter pour valider votre vote. ');       document.getElementById('mark').value = Name2Nb(this.id);
+};
+    //Réaction lors du clic sur une étoile
+    //Evidemment, il faudrait compléter cette fonction pour la rendre vraiment utile.
+    //Par exemple, envoyer la note dans une base de donnée via un XMLHttpRequest.
+    
+    img.alt     ='Donner la note de '+i;
+    //Texte au survol
+    
+    img.src     =StarOutUrl;
+    img.onmouseover =function() {StarOver(this.id);};
+    img.onmouseout  =function() {StarOut(this.id);};
+  }
+}
+
+function StarOver(Star) {
+  StarNb=Name2Nb(Star);
+  for (i=1;i<(StarNb*1)+1;i++) {
+    document.getElementById('Star'+i).src=StarOverUrl;
+  }
+}
+
+function StarOut(Star) {
+  StarNb=Name2Nb(Star);
+  for (i=1;i<(StarNb*1)+1;i++) {
+    document.getElementById('Star'+i).src=StarOutUrl;
+  }
+}
+
+function Name2Nb(Star) {
+  //Le survol d'une étoile ne nous permet pas de connaître directement son numéro
+  //Cette fonction extrait donc ce numéro à partir de l'Id
+  StarNb=Star.slice(LgtStarBaseId);
+  return(StarNb);
+} 
+-->
+</script>
+</head>
+
+
+
 <article style="float: left;  margin: 0 1.5%; width: 50%;">
 
     <div id="map"></div>
     <script>
-
-    function visibilite(content_bulle,descriptif) {
+    
+    function visibilite(content_bulle,descriptif,note,cle) {
       document.getElementById("affichage_annonce").style.visibility = "visible";
       var div = document.getElementById("affichage_annonce");  
       div.textContent = content_bulle;  
@@ -22,15 +85,38 @@
       document.getElementById("affichage_descriptif").style.visibility = "visible";
       var div = document.getElementById("affichage_descriptif");  
       div.textContent = descriptif;  
-      var text = div.textContent;      
+      var text = div.textContent;
+
+      for (i=0;i<6;i++) {
+         var num=i.toString();
+         document.getElementById("affichage_star"+num).style.visibility = "hidden";
+      }
+
+      {% if user.is_authenticated %}
+        document.getElementById("notation").style.visibility = "visible";
+        NotationSystem(cle);
+
+      {% else %}
+
+// si note vaut -1, cela signifie que le marqueur cliqué est celui d'un utilisateur. Nous n'affichons donc pas de note dans ce cas
+      if (note>-1){
+        var num=note.toString();
+        var d="affichage_star"+num;
+        document.getElementById(d).style.visibility = "visible";
+        var lien ="/static/img/etoile"+num+".jpg";
+        var div = document.getElementById(d).innerHTML = '<img src="'+lien+'"/>';
+      }
+      {% endif %}
     }
-    function addInfoWindowToMarker(map, marker, content_bulle, descriptif, pk ) {
+
+
+    function addInfoWindowToMarker(map, marker, content_bulle, descriptif, note ,cle) {
                       var infoWindow = new google.maps.InfoWindow({
                           content: content_bulle
                       });
                       google.maps.event.addListener(marker, 'click', function() {
                           infoWindow.open(map,this);
-                          visibilite(content_bulle,descriptif,pk);
+                          visibilite(content_bulle,descriptif,note,cle);
                       });
                   }
       function initMap() {
@@ -59,7 +145,7 @@
                           title: "voir le profil"
                         };
                         var mark = new google.maps.Marker(markOptions);
-                        addInfoWindowToMarker(map, mark, "{{profil.user.username}}","");
+                        addInfoWindowToMarker(map, mark, "{{profil.user.username}}","",-1,"");
 
                         {% endfor %}
 
@@ -91,8 +177,12 @@
                           icon : icons["{{add.categorie}}"].icon,
                         };
                         var mark = new google.maps.Marker(markOptions);
-
-                        addInfoWindowToMarker(map, mark, "{{add.titre}}", "{{add.descriptif}}");
+                        var note=0;
+                        if ({{add.nb_votes}} >0){
+                          note = {{add.somme_notes}} / {{add.nb_votes}};
+                        }
+                        note = Math.trunc(note);
+                        addInfoWindowToMarker(map, mark, "{{add.titre}}", "{{add.descriptif}}",note,{{add.id}});
 
 
                         {% endfor %}
@@ -107,15 +197,34 @@
 
 <aside>
 
-    <div id="affichage_annonce" style="visibility:hidden;" > </div>
-    <div id="affichage_descriptif" style="visibility:hidden;" > </div>
+  <div id="affichage_annonce" style="visibility:hidden;" > </div>
+  <div id="affichage_descriptif" style="visibility:hidden;" > </div>
+
+
+  <div id="notation" style="visibility:hidden;">
+
+    <img id="Star1" src="/static/img/star.gif" /><img id="Star2" src="/static/img/star.gif" />
+    <img id="Star3" src="/static/img/star.gif" /><img id="Star4" src="/static/img/star.gif" />
+    <img id="Star5" src="/static/img/star.gif" />
+
+    <form id="note_form" method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+             <input type="hidden" id="mark" name="mark"/>
+             <input type="hidden" id="key" name="key"/>
+             <input type="submit" name="submit" value="Voter" />
+    </form>
+  </div>
+
+
+  <div id="affichage_star0" style="visibility:hidden;" > </div>
+  <div id="affichage_star1" style="visibility:hidden;" > </div>
+  <div id="affichage_star2" style="visibility:hidden;" > </div>
+  <div id="affichage_star3" style="visibility:hidden;" > </div>
+  <div id="affichage_star4" style="visibility:hidden;" > </div>
+  <div id="affichage_star5" style="visibility:hidden;" > </div>
 
 
 
-    <script type="text/javascript">
-
-
-    </script>
 
 </aside>
 
