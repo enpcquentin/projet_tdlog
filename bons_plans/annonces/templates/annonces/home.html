@@ -9,8 +9,12 @@
 
 {% block content %}
 
-<!-- Javascript pour le système de notation -->
 
+{% if deja_vote %}
+Vous avez déjà voté pour cette annonce. Revenir vers l'<a href="{% url 'home' %}" >accueil</a>.
+{% else %}
+
+<!-- Javascript pour le système de notation -->
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
 <head>
@@ -91,22 +95,24 @@ function Name2Nb(Star) {
          var num=i.toString();
          document.getElementById("affichage_star"+num).style.visibility = "hidden";
       }
+      document.getElementById("notation").style.visibility = "hidden";
 
-      {% if user.is_authenticated %}
-        document.getElementById("notation").style.visibility = "visible";
-        NotationSystem(cle);
 
-      {% else %}
+      
 
 // si note vaut -1, cela signifie que le marqueur cliqué est celui d'un utilisateur. Nous n'affichons donc pas de note dans ce cas
       if (note>-1){
+        {% if user.is_authenticated %}
+           document.getElementById("notation").style.visibility = "visible";
+           NotationSystem(cle);
+        {% endif %}
         var num=note.toString();
         var d="affichage_star"+num;
         document.getElementById(d).style.visibility = "visible";
         var lien ="/static/img/etoile"+num+".jpg";
         var div = document.getElementById(d).innerHTML = '<img src="'+lien+'"/>';
+      
       }
-      {% endif %}
     }
 
 
@@ -226,7 +232,11 @@ function Name2Nb(Star) {
 
 
 
+
 </aside>
+
+<!-- fin du if pour savoir si l'utilisateur a tenté de voter une seconde fois pour une même annonce -->
+{% endif %}  
 
 
 {% endblock %}

@@ -11,7 +11,7 @@ from annonces.models import UserProfile, Annonce
 
 def home(request):
     """ Page d'accueil """
-    
+    deja_vote = False
     if request.method == 'POST':
         note = int(request.POST.get('mark'))
         cle = int(request.POST.get('key'))
@@ -19,11 +19,17 @@ def home(request):
         add.somme_notes += note
         add.nb_votes += 1
         add.save()
-
+        if request.user.is_authenticated:        
+            profile = request.user.userprofile
+            for e in profile.annonces_votes.all():
+                if e.id==cle:
+                    deja_vote = True
+            if deja_vote==False:
+                profile.annonces_votes.add(add)
     list_profils=[]
     for profil in UserProfile.objects.all():
         list_profils.append(profil)
-    profils_dict = {'profils': list_profils, 'annonces': Annonce.objects.order_by('date').reverse()}
+    profils_dict = {'profils': list_profils, 'annonces': Annonce.objects.order_by('date').reverse(), 'deja_vote': deja_vote}
 
     return render(request, 'annonces/home.html', profils_dict)
 
