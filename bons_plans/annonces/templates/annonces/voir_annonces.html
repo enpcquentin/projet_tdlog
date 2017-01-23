@@ -16,10 +16,70 @@
 <div><p>
     <strong><font size = '5'>Sélectionnez la catégorie qui vous intéresse : </font></strong><br>
 
-    <form id="form" method="post" action="{% url 'voir_annonces' %}" enctype="multipart/form-data">
+    <form id="annonce_form" method="post" action="{% url 'voir_annonces' %}" enctype="multipart/form-data">
 
         {% csrf_token %}
         {{ form.as_p }}
+
+        <body>
+        <div id="locationField">
+            <input id="autocomplete" placeholder="Dans quelle ville ?"
+                   onFocus="geolocate()" type="text"></input>
+        </div>
+        <tr>
+            <td class="label">Ville</td>
+            <td class="wideField" colspan="3"><input class="field" id="locality" name="ville"
+                                                     disabled="true"></input></td>
+        </tr>
+
+        <script>
+
+          var placeSearch, autocomplete;
+          var componentForm = {
+            locality: 'long_name',
+          };
+
+          function initAutocomplete() {
+            // Create the autocomplete object, restricting the search to geographical
+            // location types.
+            autocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+                {types: ['(cities)']});
+
+            // When the user selects an address from the dropdown, populate the address
+            // fields in the form.
+            autocomplete.addListener('place_changed', fillInAddress);
+          }
+
+          // [START region_fillform]
+          function fillInAddress() {
+            // Get the place details from the autocomplete object.
+            var place = autocomplete.getPlace();
+
+            for (var component in componentForm) {
+              document.getElementById(component).value = '';
+              document.getElementById(component).disabled = false;
+            }
+
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
+            for (var i = 0; i < place.address_components.length; i++) {
+              var addressType = place.address_components[i].types[0];
+              if (componentForm[addressType]) {
+                var val = place.address_components[i][componentForm[addressType]];
+                document.getElementById(addressType).value = val;
+              }
+            }
+
+          }
+          // [END region_fillform]
+
+
+        </script>
+          <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCz7usmwU_bwE46NxmQlKepw5a0GF2IYA&signed_in=true&libraries=places&callback=initAutocomplete"
+                async defer>
+          </script>
+        </body>
 
         <input type="submit" name="submit" value="Chercher" />
     </form>

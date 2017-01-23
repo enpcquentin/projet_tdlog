@@ -19,7 +19,7 @@ def home(request):
         add.somme_notes += note
         add.nb_votes += 1
         add.save()
-        if request.user.is_authenticated:        
+        if request.user.is_authenticated:
             profile = request.user.userprofile
             for e in profile.annonces_votes.all():
                 if e.id==cle:
@@ -144,7 +144,7 @@ def ajout_annonce(request):
 
     return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
 
-    
+
 def profil(request):
     modified = False
     profile = request.user.userprofile
@@ -178,7 +178,7 @@ def profil(request):
                   'annonces/profil.html',
                   {'profile_form': profile_form, 'modified': modified})
 
-    
+
 def voir_annonces(request):
     """ Vue pour rechercher des annonces par attributs """
 
@@ -194,7 +194,8 @@ def voir_annonces(request):
             cat = form.save(commit = False)
             test = True
             categorie = cat.categorie
-            ville = cat.ville
+            ville = request.POST.get('ville')
+            print(ville)
             # interrogation de la BDD
             annonces = Annonce.objects.filter(categorie = categorie, ville = ville)
         else:

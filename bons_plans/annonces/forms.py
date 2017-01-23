@@ -9,7 +9,7 @@ class ConnexionForm(forms.Form):
 
     username = forms.CharField(label="Nom d'utilisateur", max_length=30)
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
-    
+
 
 class Notation(forms.Form):
     """ Formulaire de notation d'une annonce """
@@ -48,4 +48,4 @@ class VoirAnnonces(forms.ModelForm):
 
     class Meta:
         model = Annonce
-        fields = ('categorie', 'ville')
+        fields = ('categorie',)
