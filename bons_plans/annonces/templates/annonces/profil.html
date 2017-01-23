@@ -7,10 +7,9 @@
 {% endif %}
 <form id="user_form" method="post" action="{% url 'profil' %}"
       enctype="multipart/form-data">
-
+    <img src="{{ pic_url }}">
   {% csrf_token %}
   {{ profile_form.as_p }}
-
   <body>
   <div id="locationField">
     <input id="autocomplete" placeholder="Enter your address"
@@ -31,7 +30,7 @@
                                                disabled="true"></input></td>
     </tr>
     <tr>
-      <td class="label">Region</td>
+      <td class="label">Région</td>
       <td class="slimField"><input class="field"
                                    id="administrative_area_level_1" name="region" disabled="true"></input></td>
       <td class="label">Code Postal</td>

@@ -64,7 +64,6 @@ def inscription(request):
 
     # un booléan pour tester la validation de l'enregistrement
     registered = False
-
     # on a besoin d'une méthode POST pour le formulaire
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
@@ -101,7 +100,7 @@ def inscription(request):
 
     return render(request,
                   'annonces/inscription.html',
-                  {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
+                  {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
 def deconnexion(request):
@@ -148,12 +147,10 @@ def ajout_annonce(request):
 def profil(request):
     modified = False
     profile = request.user.userprofile
-    print(profile.user)
     if request.method == 'POST':
         profile_form = UserProfileForm(data=request.POST, instance=profile)
         if profile_form.is_valid():
             profile_form.save(commit=False)
-
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
 
@@ -172,11 +169,11 @@ def profil(request):
             print(profile_form.errors)
     else:
         profile_form = UserProfileForm(instance=profile)
-
+        pic_url = '../' + profile.picture.url
     # Renvoit le template prenant en compte les differents cas
     return render(request,
                   'annonces/profil.html',
-                  {'profile_form': profile_form, 'modified': modified})
+                  {'pic_url': pic_url, 'profile_form': profile_form, 'modified': modified})
 
 
 def voir_annonces(request):
