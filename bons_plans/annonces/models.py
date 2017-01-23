@@ -4,9 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-    picture = models.ImageField(upload_to='static/img', blank=True)
 
-    # Attributs d'addresse
 
 
 
