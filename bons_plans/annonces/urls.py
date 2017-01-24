@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^voir_annonces$', views.voir_annonces, name='voir_annonces'),
     url(r'^(?P<pk>[-\w]+)/$', AnnonceDetailView.as_view(), name='annonce_detail'),
     url(r'^profil$', views.profil, name='profil'),
+    url(r'^mesannonces$', views.mesannonces, name='mesannonces'),
+
 ]

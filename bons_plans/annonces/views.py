@@ -216,3 +216,16 @@ class AnnonceDetailView(DetailView):
         context = super(AnnonceDetailView, self).get_context_data(**kwargs)
         context['now'] = timezone.now()
         return context
+
+def mesannonces(request):
+    profile = request.user.userprofile
+    if request.method == 'POST':
+        for add in Annonce.objects.all():
+            cle = request.POST.get(str(add.id))
+            if cle!=None:
+                add.delete()    
+    mesannonces=[]
+    for add in Annonce.objects.all():
+        if add.auteur.id==profile.user.id:
+            mesannonces.append(add)
+    return render(request,'annonces/mesannonces.html',{'mesannonces': mesannonces})

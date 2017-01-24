@@ -11,12 +11,6 @@ class ConnexionForm(forms.Form):
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
 
 
-class Notation(forms.Form):
-    """ Formulaire de notation d'une annonce """
-
-    key = forms.IntegerField()
-    mark = forms.IntegerField()
-
 
 class UserForm(forms.ModelForm):
     """ Formulaire d'utilisateur """
