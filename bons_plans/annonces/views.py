@@ -172,7 +172,10 @@ def profil(request):
             print(profile_form.errors)
     else:
         profile_form = UserProfileForm(instance=profile)
-        pic_url = '../' + profile.picture.url
+        if profile.picture:
+            pic_url = '../' + profile.picture.url
+        else:
+            pic_url = ''
     # Renvoit le template prenant en compte les differents cas
     return render(request,
                   'annonces/profil.html',
