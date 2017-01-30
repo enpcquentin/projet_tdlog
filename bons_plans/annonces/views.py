@@ -11,6 +11,7 @@ from annonces.models import UserProfile, Annonce
 
 def home(request):
     """ Page d'accueil """
+    
     deja_vote = False
     if request.method == 'POST':
         note = int(request.POST.get('mark'))
@@ -145,6 +146,8 @@ def ajout_annonce(request):
 
 
 def profil(request):
+    """ Visualisation du profil de l'utilisateur connecté, s'il n'est pas admin """
+
     modified = False
     profile = request.user.userprofile
     if request.method == 'POST':
@@ -218,11 +221,13 @@ class AnnonceDetailView(DetailView):
         return context
 
 def mesannonces(request):
+    """ Vue pour afficher les annonces de l'utilisateur connecté. Possibilité de les supprimer. """
+
     utilisateur = request.user
     if request.method == 'POST':
         for add in Annonce.objects.all():
             cle = request.POST.get(str(add.id))
             if cle!=None:
-                add.delete() 
+                add.delete()
     mesannonces = Annonce.objects.filter(auteur = utilisateur)
     return render(request,'annonces/mesannonces.html',{'mesannonces': mesannonces})
