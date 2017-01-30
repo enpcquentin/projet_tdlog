@@ -208,7 +208,7 @@ def voir_annonces(request):
 
 
 class AnnonceDetailView(DetailView):
-    """ Vue pour n'afficher qu'une annonce en particulier de la BDD, grâce au clés primaires """
+    """ Vue pour n'afficher qu'une annonce en particulier de la BDD, grâce aux clés primaires """
 
     model = Annonce
 
@@ -218,14 +218,11 @@ class AnnonceDetailView(DetailView):
         return context
 
 def mesannonces(request):
-    profile = request.user.userprofile
+    utilisateur = request.user
     if request.method == 'POST':
         for add in Annonce.objects.all():
             cle = request.POST.get(str(add.id))
             if cle!=None:
-                add.delete()    
-    mesannonces=[]
-    for add in Annonce.objects.all():
-        if add.auteur.id==profile.user.id:
-            mesannonces.append(add)
+                add.delete() 
+    mesannonces = Annonce.objects.filter(auteur = utilisateur)
     return render(request,'annonces/mesannonces.html',{'mesannonces': mesannonces})
