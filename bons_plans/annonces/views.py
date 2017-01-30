@@ -11,7 +11,7 @@ from annonces.models import UserProfile, Annonce
 
 def home(request):
     """ Page d'accueil """
-    
+
     deja_vote = False
     if request.method == 'POST':
         note = int(request.POST.get('mark'))
@@ -141,8 +141,8 @@ def ajout_annonce(request):
             print(annonce_form.errors)
     else:
         annonce_form = AnnonceForm()
-
-    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
+        test = True
+    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted, 'test': test} )
 
 
 def profil(request):

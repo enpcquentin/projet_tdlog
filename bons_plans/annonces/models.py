@@ -42,8 +42,8 @@ class Annonce(models.Model):
     def __str__(self):
         return self.titre
 
-        
-        
+
+
 class UserProfile(models.Model):
     """Modèle de profil, lié à chaque compte utilisateur"""
 
