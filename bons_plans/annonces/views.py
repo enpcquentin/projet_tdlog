@@ -43,7 +43,6 @@ def connexion(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
-
         if user:
             # on vérifie que le compte courant est valide et actif
             # si c'est le cas, on connecte l'utilisateur
@@ -55,7 +54,6 @@ def connexion(request):
         else:
             print("Erreur dans le mot de passe ou l'identifiant : {0}, {1}".format(username, password))
             return HttpResponse("Erreur dans le mot de passe ou l'identifiant.")
-
     else:
         return render(request, 'annonces/connexion.html', {})
 
@@ -79,6 +77,7 @@ def inscription(request):
             if 'picture' in request.FILES:
                 # sauvegarde de la photo de profil si elle existe
                 profile.picture = request.FILES['picture']
+            # on s'assure que l'utilisateur entre une adresse complète
             try:
                 profile.ville = request.POST.get('ville')
                 profile.numero = request.POST.get('numero')
@@ -128,6 +127,7 @@ def ajout_annonce(request):
         annonce_form = AnnonceForm(data=request.POST)
         # on teste la validité du formulaire
         if annonce_form.is_valid():
+            # on s'assure que l'utilisateur entre une adresse complète
             try: 
                 # commit = False pour ne pas sauvegarder dans la BDD tout de suite
                 annonce = annonce_form.save(commit=False)
@@ -184,7 +184,7 @@ def profil(request):
             pic_url = '../' + profile.picture.url
         else:
             pic_url = ''
-    # Renvoit le template prenant en compte les differents cas
+    # Renvoie le template prenant en compte les differents cas
     return render(request,
                   'annonces/profil.html',
                   {'pic_url': pic_url, 'profile_form': profile_form, 'modified': modified})

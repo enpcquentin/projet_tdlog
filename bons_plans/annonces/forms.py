@@ -20,6 +20,12 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        mail = self.cleaned_data.get('email')
+        if mail=="": # Est-ce que l'utilisateur a bien spécifié une adresse mail ?
+            raise forms.ValidationError("Merci de spécifier une adresse mail")
+        return cleaned_data
 
 
 class UserProfileForm(forms.ModelForm):
