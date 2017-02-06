@@ -73,26 +73,32 @@ def inscription(request):
             user = user_form.save()
             user.set_password(user.password)
             # sauvegarde de l'entrée utilisateur
-            user.save()
 
             profile = profile_form.save(commit=False)
-            profile.user = user
+            
             if 'picture' in request.FILES:
                 # sauvegarde de la photo de profil si elle existe
                 profile.picture = request.FILES['picture']
-
-            profile.ville = request.POST.get('ville')
-            profile.numero = request.POST.get('numero')
-            profile.region = request.POST.get('region')
-            profile.pays = request.POST.get('pays')
-            profile.code_postal = request.POST.get('code_postal')
-            profile.rue = request.POST.get('rue')
-            profile.lat = float(request.POST.get('cityLat'))
-            profile.long = float(request.POST.get('cityLng'))
-            # sauvegarde de l'entrée profil
-            profile.save()
-            # on signale au template que l'enregistrement s'est correctement réalisé
-            registered = True
+            try:
+                profile.ville = request.POST.get('ville')
+                profile.numero = request.POST.get('numero')
+                profile.region = request.POST.get('region')
+                profile.pays = request.POST.get('pays')
+                profile.code_postal = request.POST.get('code_postal')
+                profile.rue = request.POST.get('rue')
+                profile.lat = float(request.POST.get('cityLat'))
+                profile.long = float(request.POST.get('cityLng'))
+                # sauvegarde de l'entrée profil
+                user.save()
+                profile.user = user
+                profile.save()
+                # on signale au template que l'enregistrement s'est correctement réalisé
+                registered = True
+            except:
+                user.delete()
+                return render(request,
+                  'annonces/inscription.html',
+                  {'user_form': user_form, 'profile_form': profile_form, 'registered': False,'adresse_incorrecte': True})
         else:
             print(user_form.errors, profile_form.errors)
     else:
@@ -101,7 +107,7 @@ def inscription(request):
 
     return render(request,
                   'annonces/inscription.html',
-                  {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+                  {'user_form': user_form, 'profile_form': profile_form, 'registered': registered,'adresse_incorrecte': False})
 
 
 def deconnexion(request):
@@ -122,26 +128,29 @@ def ajout_annonce(request):
         annonce_form = AnnonceForm(data=request.POST)
         # on teste la validité du formulaire
         if annonce_form.is_valid():
-            # commit = False pour ne pas sauvegarder dans la BDD tout de suite
-            annonce = annonce_form.save(commit=False)
-            annonce.auteur = request.user
-            annonce.date = timezone.now()
-            annonce.ville = request.POST.get('ville')
-            annonce.numero = request.POST.get('numero')
-            annonce.region = request.POST.get('region')
-            annonce.pays = request.POST.get('pays')
-            annonce.code_postal = request.POST.get('code_postal')
-            annonce.rue = request.POST.get('rue')
-            annonce.lat = float(request.POST.get('cityLat'))
-            annonce.long = float(request.POST.get('cityLng'))
-            annonce.save()
-            # on signale au template que l'ajout s'est correctement passé
-            posted = True
+            try: 
+                # commit = False pour ne pas sauvegarder dans la BDD tout de suite
+                annonce = annonce_form.save(commit=False)
+                annonce.auteur = request.user
+                annonce.date = timezone.now()
+                annonce.ville = request.POST.get('ville')
+                annonce.numero = request.POST.get('numero')
+                annonce.region = request.POST.get('region')
+                annonce.pays = request.POST.get('pays')
+                annonce.code_postal = request.POST.get('code_postal')
+                annonce.rue = request.POST.get('rue')
+                annonce.lat = float(request.POST.get('cityLat'))
+                annonce.long = float(request.POST.get('cityLng'))
+                annonce.save()
+                # on signale au template que l'ajout s'est correctement passé
+                posted = True
+            except:
+                return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': False, 'adresse_incorrecte': True} )
         else:
             print(annonce_form.errors)
     else:
         annonce_form = AnnonceForm()
-    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
+    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted, 'adresse_incorrecte': False} )
 
 
 def profil(request):

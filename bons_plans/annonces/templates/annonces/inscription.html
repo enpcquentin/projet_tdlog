@@ -15,7 +15,10 @@
     {{ user_form.as_p }}
     {{ profile_form.as_p }}
 
+        {% if adresse_incorrecte %}
 
+        <span style="color:#FF0000"><font size = 3> Veuillez donner une adresse complète </font></span><br>
+        {% endif %}
 
     <body>
     <div id="locationField">
