@@ -17,6 +17,9 @@
     <br />
 
     <input type="submit" value="Connexion" />
+</form>
 
+<form action="{% url 'password_reset' %}">
+    <input type="submit" value="Mot de passe oublié?" />
 </form>
 {% endblock %}

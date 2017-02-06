@@ -7,7 +7,7 @@
 {% endif %}
 <form id="user_form" method="post" action="{% url 'profil' %}"
       enctype="multipart/form-data">
-    <img src="{{ pic_url }}">
+    <img src="{{ pic_url }}" height="250">
   {% csrf_token %}
   {{ profile_form.as_p }}
   <body>

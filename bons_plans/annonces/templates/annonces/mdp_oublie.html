@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block titlepage%} Oubli de mot de passe  {% endblock %}
+
+{% block content %}
+
+  <h3>Mot de passe oublié?</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Envoyer</button>
+  </form>
+
+{% endblock %}
