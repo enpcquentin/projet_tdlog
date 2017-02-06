@@ -33,6 +33,7 @@ function NotationSystem(cle) { //le paramètre cle désigne la clé primaire de 
 
   for (i=1;i<NbStar+1;i++) {
     var img     =document.getElementById('Star'+i);
+    document.getElementById('mark').value =0;
       
     img.onclick   =function() {alert('Vous souhaitez donner la note de '+Name2Nb(this.id)+'.' +' Appuyez sur le bouton Voter pour valider votre vote. ');       document.getElementById('mark').value = Name2Nb(this.id);
 };

@@ -32,7 +32,6 @@ class Annonce(models.Model):
     pays = models.CharField(max_length=100, default='France')
     code_postal = models.IntegerField(default=77420)
     region = models.CharField(max_length=100, default='Île-de-France')
-
     ville = models.CharField(max_length=100, default='Noisy-le-Grand')
     lat = models.FloatField(default=48.8411)
     long = models.FloatField(default=2.5880)

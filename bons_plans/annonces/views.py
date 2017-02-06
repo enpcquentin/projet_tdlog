@@ -16,16 +16,16 @@ def home(request):
     if request.method == 'POST':
         note = int(request.POST.get('mark'))
         cle = int(request.POST.get('key'))
-        add = Annonce.objects.get(id__iexact=cle)
-        add.somme_notes += note
-        add.nb_votes += 1
-        add.save()
         if request.user.is_authenticated:
             profile = request.user.userprofile
             for e in profile.annonces_votes.all():
                 if e.id==cle:
                     deja_vote = True
             if deja_vote==False:
+                add = Annonce.objects.get(id__iexact=cle)
+                add.somme_notes += note
+                add.nb_votes += 1
+                add.save()
                 profile.annonces_votes.add(add)
     list_profils=[]
     for profil in UserProfile.objects.all():
@@ -47,14 +47,14 @@ def connexion(request):
         if user:
             # on vérifie que le compte courant est valide et actif
             # si c'est le cas, on connecte l'utilisateur
-            if user.is_active:
+            if user.is_active and not(user.is_superuser):
                 login(request, user)
                 return HttpResponseRedirect('/annonces/home')
             else:
-                return HttpResponse("Your Rango account is disabled.")
+                return HttpResponse("Vous n'êtes autorisé à vous connecter.")
         else:
-            print("Invalid login details: {0}, {1}".format(username, password))
-            return HttpResponse("Invalid login details supplied.")
+            print("Erreur dans le mot de passe ou l'identifiant : {0}, {1}".format(username, password))
+            return HttpResponse("Erreur dans le mot de passe ou l'identifiant.")
 
     else:
         return render(request, 'annonces/connexion.html', {})
@@ -141,8 +141,7 @@ def ajout_annonce(request):
             print(annonce_form.errors)
     else:
         annonce_form = AnnonceForm()
-        test = True
-    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted, 'test': test} )
+    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted} )
 
 
 def profil(request):
