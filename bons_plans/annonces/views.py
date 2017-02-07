@@ -158,36 +158,41 @@ def profil(request):
 
     modified = False
     profile = request.user.userprofile
+    profile_form = UserProfileForm(instance=profile)
+    if profile.picture:
+        pic_url = '../' + profile.picture.url
+    else:
+        pic_url = ''
     if request.method == 'POST':
         profile_form = UserProfileForm(data=request.POST, instance=profile)
         if profile_form.is_valid():
             profile_form.save(commit=False)
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
-
-            profile.ville = request.POST.get('ville')
-            profile.numero = request.POST.get('numero')
-            profile.region = request.POST.get('region')
-            profile.pays = request.POST.get('pays')
-            profile.code_postal = request.POST.get('code_postal')
-            profile.rue = request.POST.get('rue')
-            profile.lat = float(request.POST.get('cityLat'))
-            profile.long = float(request.POST.get('cityLng'))
-
-            profile.save()
-            modified = True
+            try: 
+    
+                profile.ville = request.POST.get('ville')
+                profile.numero = request.POST.get('numero')
+                profile.region = request.POST.get('region')
+                profile.pays = request.POST.get('pays')
+                profile.code_postal = request.POST.get('code_postal')
+                profile.rue = request.POST.get('rue')
+                profile.lat = float(request.POST.get('cityLat'))
+                profile.long = float(request.POST.get('cityLng'))
+    
+                profile.save()
+                modified = True
+            except:
+                return render(request,
+                  'annonces/profil.html',
+                  {'pic_url': pic_url, 'profile_form': profile_form, 'modified': False, 'adresse_incorrecte': True})
         else:
             print(profile_form.errors)
-    else:
-        profile_form = UserProfileForm(instance=profile)
-        if profile.picture:
-            pic_url = '../' + profile.picture.url
-        else:
-            pic_url = ''
+
     # Renvoie le template prenant en compte les differents cas
     return render(request,
                   'annonces/profil.html',
-                  {'pic_url': pic_url, 'profile_form': profile_form, 'modified': modified})
+                  {'pic_url': pic_url, 'profile_form': profile_form, 'modified': modified, 'adresse_incorrecte': False})
 
 
 def voir_annonces(request):

@@ -10,6 +10,11 @@
     <img src="{{ pic_url }}" height="250">
   {% csrf_token %}
   {{ profile_form.as_p }}
+
+  {% if adresse_incorrecte %}
+    <span style="color:#FF0000"><font size = 3> Pour modifier votre profil, veuillez spécifier votre adresse complète </font></span><br>
+  {% endif %}
+
   <body>
   <div id="locationField">
     <input id="autocomplete" placeholder="Enter your address"
