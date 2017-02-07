@@ -55,7 +55,7 @@ def connexion(request):
             print("Erreur dans le mot de passe ou l'identifiant : {0}, {1}".format(username, password))
             return HttpResponse("Erreur dans le mot de passe ou l'identifiant.")
     else:
-        return render(request, 'annonces/connexion.html', {})
+        return render(request, 'annonces/connexion.html', {'erreur' : False})
 
 
 def inscription(request):
@@ -73,7 +73,7 @@ def inscription(request):
             # sauvegarde de l'entrée utilisateur
 
             profile = profile_form.save(commit=False)
-            
+
             if 'picture' in request.FILES:
                 # sauvegarde de la photo de profil si elle existe
                 profile.picture = request.FILES['picture']
@@ -122,77 +122,88 @@ def ajout_annonce(request):
     # un booléen pour tester la validation de la demande
     posted = False
 
-    # on a besoin d'une méthode POST pour le formulaire
-    if request.method == 'POST':
-        annonce_form = AnnonceForm(data=request.POST)
-        # on teste la validité du formulaire
-        if annonce_form.is_valid():
-            # on s'assure que l'utilisateur entre une adresse complète
-            try: 
-                # commit = False pour ne pas sauvegarder dans la BDD tout de suite
-                annonce = annonce_form.save(commit=False)
-                annonce.auteur = request.user
-                annonce.date = timezone.now()
-                annonce.ville = request.POST.get('ville')
-                annonce.numero = request.POST.get('numero')
-                annonce.region = request.POST.get('region')
-                annonce.pays = request.POST.get('pays')
-                annonce.code_postal = request.POST.get('code_postal')
-                annonce.rue = request.POST.get('rue')
-                annonce.lat = float(request.POST.get('cityLat'))
-                annonce.long = float(request.POST.get('cityLng'))
-                annonce.save()
-                # on signale au template que l'ajout s'est correctement passé
-                posted = True
-            except:
-                return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': False, 'adresse_incorrecte': True} )
+    if request.user.is_authenticated:
+
+        # on a besoin d'une méthode POST pour le formulaire
+        if request.method == 'POST':
+            annonce_form = AnnonceForm(data=request.POST)
+            # on teste la validité du formulaire
+            if annonce_form.is_valid():
+                # on s'assure que l'utilisateur entre une adresse complète
+                try:
+                    # commit = False pour ne pas sauvegarder dans la BDD tout de suite
+                    annonce = annonce_form.save(commit=False)
+                    annonce.auteur = request.user
+                    annonce.date = timezone.now()
+                    annonce.ville = request.POST.get('ville')
+                    annonce.numero = request.POST.get('numero')
+                    annonce.region = request.POST.get('region')
+                    annonce.pays = request.POST.get('pays')
+                    annonce.code_postal = request.POST.get('code_postal')
+                    annonce.rue = request.POST.get('rue')
+                    annonce.lat = float(request.POST.get('cityLat'))
+                    annonce.long = float(request.POST.get('cityLng'))
+                    annonce.save()
+                    # on signale au template que l'ajout s'est correctement passé
+                    posted = True
+                except:
+                    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': False, 'adresse_incorrecte': True} )
+            else:
+                print(annonce_form.errors)
         else:
-            print(annonce_form.errors)
+            annonce_form = AnnonceForm()
+        return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted, 'adresse_incorrecte': False} )
+
+    # si l'utilisateur n'est pas connecté, on le renvoie sur la page de connection
     else:
-        annonce_form = AnnonceForm()
-    return render(request, 'annonces/ajout_annonce.html', {'annonce_form': annonce_form, 'posted': posted, 'adresse_incorrecte': False} )
+        return render(request, 'annonces/connexion.html', {'erreur': True})
 
 
 def profil(request):
     """ Visualisation du profil de l'utilisateur connecté, s'il n'est pas admin """
 
     modified = False
-    profile = request.user.userprofile
-    profile_form = UserProfileForm(instance=profile)
-    if profile.picture:
-        pic_url = '../' + profile.picture.url
-    else:
-        pic_url = ''
-    if request.method == 'POST':
-        profile_form = UserProfileForm(data=request.POST, instance=profile)
-        if profile_form.is_valid():
-            profile_form.save(commit=False)
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-            try: 
-    
-                profile.ville = request.POST.get('ville')
-                profile.numero = request.POST.get('numero')
-                profile.region = request.POST.get('region')
-                profile.pays = request.POST.get('pays')
-                profile.code_postal = request.POST.get('code_postal')
-                profile.rue = request.POST.get('rue')
-                profile.lat = float(request.POST.get('cityLat'))
-                profile.long = float(request.POST.get('cityLng'))
-    
-                profile.save()
-                modified = True
-            except:
-                return render(request,
-                  'annonces/profil.html',
-                  {'pic_url': pic_url, 'profile_form': profile_form, 'modified': False, 'adresse_incorrecte': True})
+    if request.user.is_authenticated:
+        profile = request.user.userprofile
+        profile_form = UserProfileForm(instance=profile)
+        if profile.picture:
+            pic_url = '../' + profile.picture.url
         else:
-            print(profile_form.errors)
+            pic_url = ''
+        if request.method == 'POST':
+            profile_form = UserProfileForm(data=request.POST, instance=profile)
+            if profile_form.is_valid():
+                profile_form.save(commit=False)
+                if 'picture' in request.FILES:
+                    profile.picture = request.FILES['picture']
+                try:
 
-    # Renvoie le template prenant en compte les differents cas
-    return render(request,
-                  'annonces/profil.html',
-                  {'pic_url': pic_url, 'profile_form': profile_form, 'modified': modified, 'adresse_incorrecte': False})
+                    profile.ville = request.POST.get('ville')
+                    profile.numero = request.POST.get('numero')
+                    profile.region = request.POST.get('region')
+                    profile.pays = request.POST.get('pays')
+                    profile.code_postal = request.POST.get('code_postal')
+                    profile.rue = request.POST.get('rue')
+                    profile.lat = float(request.POST.get('cityLat'))
+                    profile.long = float(request.POST.get('cityLng'))
+
+                    profile.save()
+                    modified = True
+                except:
+                    return render(request,
+                      'annonces/profil.html',
+                      {'pic_url': pic_url, 'profile_form': profile_form, 'modified': False, 'adresse_incorrecte': True})
+            else:
+                print(profile_form.errors)
+
+        # Renvoie le template prenant en compte les differents cas
+        return render(request,
+                      'annonces/profil.html',
+                      {'pic_url': pic_url, 'profile_form': profile_form, 'modified': modified, 'adresse_incorrecte': False})
+
+    # si l'utilisateur n'est pas connecté, on le renvoie sur la page de connection
+    else:
+        return render(request, 'annonces/connexion.html', {'erreur': True})
 
 
 def voir_annonces(request):
@@ -201,29 +212,35 @@ def voir_annonces(request):
     # un booléen pour tester la validation de la demande
     test = False
 
-    if request.method == 'POST':
-        form = VoirAnnonces(data=request.POST)
-        # on teste la validité du formulaire
-        if form.is_valid():
-            # commit = False pour ne pas sauvegarder dans la BDD
-            # on ne souhaite pas crée un nouvel élément dans la BDD mais juste l'interroger
-            cat = form.save(commit = False)
-            test = True
-            categorie = cat.categorie
-            ville = request.POST.get('ville')
-            print(ville)
-            # interrogation de la BDD
-            annonces = Annonce.objects.filter(categorie = categorie, ville = ville)
-        else:
-            print(form.errors)
-    # cas en pratique jamais atteint
-    else:
-        form = VoirAnnonces()
-        annonces = Annonce.objects.all()
-        ville = ""
-        categorie = ""
+    if request.user.is_authenticated:
 
-    return render(request, 'annonces/voir_annonces.html', {'form': form, 'annonces': annonces, 'test': test, 'ville': ville, 'categorie': categorie})
+        if request.method == 'POST':
+            form = VoirAnnonces(data=request.POST)
+            # on teste la validité du formulaire
+            if form.is_valid():
+                # commit = False pour ne pas sauvegarder dans la BDD
+                # on ne souhaite pas crée un nouvel élément dans la BDD mais juste l'interroger
+                cat = form.save(commit = False)
+                test = True
+                categorie = cat.categorie
+                ville = request.POST.get('ville')
+                print(ville)
+                # interrogation de la BDD
+                annonces = Annonce.objects.filter(categorie = categorie, ville = ville)
+            else:
+                print(form.errors)
+        # cas en pratique jamais atteint
+        else:
+            form = VoirAnnonces()
+            annonces = Annonce.objects.all()
+            ville = ""
+            categorie = ""
+
+        return render(request, 'annonces/voir_annonces.html', {'form': form, 'annonces': annonces, 'test': test, 'ville': ville, 'categorie': categorie})
+
+    # si l'utilisateur n'est pas connecté, on le renvoie sur la page de connection
+    else:
+        return render(request, 'annonces/connexion.html', {'erreur': True})
 
 
 class AnnonceDetailView(DetailView):
@@ -239,11 +256,17 @@ class AnnonceDetailView(DetailView):
 def mesannonces(request):
     """ Vue pour afficher les annonces de l'utilisateur connecté. Possibilité de les supprimer. """
 
-    utilisateur = request.user
-    if request.method == 'POST':
-        for add in Annonce.objects.all():
-            cle = request.POST.get(str(add.id))
-            if cle!=None:
-                add.delete()
-    mesannonces = Annonce.objects.filter(auteur = utilisateur)
-    return render(request,'annonces/mesannonces.html',{'mesannonces': mesannonces})
+    if request.user.is_authenticated:
+
+        utilisateur = request.user
+        if request.method == 'POST':
+            for add in Annonce.objects.all():
+                cle = request.POST.get(str(add.id))
+                if cle!=None:
+                    add.delete()
+        mesannonces = Annonce.objects.filter(auteur = utilisateur)
+        return render(request,'annonces/mesannonces.html',{'mesannonces': mesannonces})
+
+    # si l'utilisateur n'est pas connecté, on le renvoie sur la page de connection
+    else:
+        return render(request, 'annonces/connexion.html', {'erreur': True})        

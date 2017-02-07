@@ -3,6 +3,10 @@
 {% block titlepage%} Se connecter  {% endblock %}
 
 {% block content %}
+<div>
+{% if erreur %}
+<span style="color:#FF0000"><font size = 3> Veuillez vous connecter pour continuer </font></span><br>
+{% endif %}
 
 <form id="login_form" method="post" action="{% url 'connexion' %}">
     {% csrf_token %}
@@ -22,4 +26,6 @@
 <form action="{% url 'password_reset' %}">
     <input type="submit" value="Mot de passe oublié?" />
 </form>
+</div>
+
 {% endblock %}
